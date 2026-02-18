@@ -12,7 +12,7 @@ export default async function ProfilDesa() {
   ]);
 
   // PENGAMAN: Jika dataProfil null, buat objek kosong agar tidak error undefined
-  const fields = dataProfil?.fields || {};
+  const fields: any = dataProfil?.fields || {};
 
   return (
     <main className="min-h-screen bg-gray-50 pb-20 pt-32">
@@ -27,8 +27,8 @@ export default async function ProfilDesa() {
           <div className="bg-white p-8 md:p-12 rounded-[40px] shadow-xl shadow-green-900/5 border border-green-50">
             <h2 className="text-xl font-bold text-green-700 mb-4 uppercase tracking-widest">📜 Sejarah Desa</h2>
             <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed italic border-l-4 border-gray-100 pl-6 whitespace-pre-wrap">
-              {/* Menampilkan teks sejarah atau pesan default jika kosong */}
-              {fields.sejarah || "Narasi sejarah desa sedang dalam proses penyusunan."}
+              {/* FIX: Paksa menjadi String agar tidak error build di Vercel */}
+              {fields.sejarah ? String(fields.sejarah) : "Narasi sejarah desa sedang dalam proses penyusunan."}
             </div>
           </div>
         </section>
@@ -41,7 +41,8 @@ export default async function ProfilDesa() {
             <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition">🎯</div>
             <h3 className="text-2xl font-black text-gray-800 mb-4 uppercase">Visi Desa</h3>
             <p className="text-gray-600 leading-relaxed font-medium italic">
-              {fields.visi ? `"${fields.visi}"` : "Belum diisi di dashboard."}
+              {/* FIX: Paksa menjadi String */}
+              {fields.visi ? `"${String(fields.visi)}"` : "Belum diisi di dashboard."}
             </p>
           </div>
 
@@ -51,7 +52,8 @@ export default async function ProfilDesa() {
             <h3 className="text-2xl font-black text-gray-800 mb-4 uppercase">Misi Desa</h3>
             <div className="text-gray-600 space-y-3 font-medium">
               {fields.misi ? (
-                <div className="whitespace-pre-wrap">{fields.misi}</div>
+                /* FIX: Paksa menjadi String */
+                <div className="whitespace-pre-wrap">{String(fields.misi)}</div>
               ) : (
                 <p>Belum diisi di dashboard.</p>
               )}
@@ -72,7 +74,6 @@ export default async function ProfilDesa() {
               allPerangkat.map((staf: any) => (
                 <div key={staf.sys.id} className="bg-white p-6 rounded-[35px] shadow-sm border border-gray-100 flex flex-col items-center group hover:shadow-2xl transition-all duration-500">
                   <div className="relative w-36 h-36 rounded-3xl overflow-hidden mb-6 border-4 border-gray-50 shadow-md bg-gray-100">
-                    {/* Mengambil URL foto dari field fotoPerangkat */}
                     {staf.fields.fotoPerangkat?.fields?.file?.url ? (
                       <Image 
                         src={`https:${staf.fields.fotoPerangkat.fields.file.url}`} 
@@ -88,7 +89,7 @@ export default async function ProfilDesa() {
                   <h3 className="text-lg font-black text-gray-800 text-center uppercase tracking-tighter leading-tight px-2 line-clamp-2">
                     {staf.fields.namaPerangkat || "Perangkat Desa"}
                   </h3>
-                  <span className="text-green-700 font-black uppercase tracking-widest text-[10px] mt-4 bg-green-50 px-4 py-1.5 rounded-full border border-green-100 text-black">
+                  <span className="text-green-700 font-black uppercase tracking-widest text-[10px] mt-4 bg-green-50 px-4 py-1.5 rounded-full border border-green-100">
                     {staf.fields.jabatan || "Staf"}
                   </span>
                 </div>
