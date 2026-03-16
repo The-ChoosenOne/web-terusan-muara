@@ -1,60 +1,73 @@
 "use client"; 
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, Navigation } from "swiper/modules";
+import { Autoplay, Pagination, Navigation, EffectFade } from "swiper/modules";
+import Image from "next/image";
+
+// Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+import "swiper/css/effect-fade";
 
-export default function HeroSlider({ photos }: { photos: any }) {
+export default function HeroSlider({ photos }: { photos: string[] }) {
+  // PENGAMAN: Kalau photos bukan array atau kosong, kasih gambar default
+  const validPhotos = Array.isArray(photos) && photos.length > 0 
+    ? photos 
+    : ["/placeholder-desa.jpg"]; 
+
   return (
-    <section className="relative h-[550px] md:h-[750px] overflow-hidden bg-black">
+    <section className="relative h-[550px] md:h-[750px] overflow-hidden bg-slate-950">
       <Swiper
-        modules={[Autoplay, Pagination, Navigation]}
+        modules={[Autoplay, Pagination, Navigation, EffectFade]}
+        effect="fade" // Pakai efek fade biar transisinya mewah
         spaceBetween={0}
         slidesPerView={1}
         loop={true}
-        speed={1200} // Kecepatan geser yang smooth
+        speed={1500}
         autoplay={{ delay: 5000, disableOnInteraction: false }}
         pagination={{ clickable: true }}
         navigation={true}
         className="h-full w-full mySwiper"
       >
-        {photos?.map((photo: any, index: number) => (
+        {validPhotos.map((url: string, index: number) => (
           <SwiperSlide key={index} className="relative overflow-hidden">
-            {/* Foto dengan Efek Zoom Lambat */}
-            <div 
-              className="absolute inset-0 bg-cover bg-center scale-110"
-              style={{ 
-                backgroundImage: `url('https:${photo.fields?.file?.url}')`,
-              }}
-            >
-              {/* Overlay Gradient agar teks "pop-up" */}
-              <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent" />
+            
+            {/* PAKAI NEXT/IMAGE: Lebih stabil daripada backgroundImage */}
+            <div className="absolute inset-0 z-0">
+              <Image
+                src={url}
+                alt={`Slider Desa ${index}`}
+                fill
+                priority={index === 0}
+                className="object-cover animate-pulse-slow" // Gue tambahin animasi halus
+              />
+              {/* Overlay Gradient Slate tetap ada */}
+              <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/50 to-transparent z-10" />
             </div>
 
-            {/* Konten Teks yang Ikut Bergeser */}
-            <div className="relative z-10 h-full flex items-center px-10 md:px-24">
-              <div className="max-w-3xl text-left">
-                <div className="mb-4 inline-block px-4 py-1 rounded-full border border-green-500/30 bg-green-500/10 backdrop-blur-md">
-                  <span className="text-[10px] font-black tracking-[0.4em] uppercase text-green-400">
+            {/* KONTEN TEKS */}
+            <div className="relative z-20 h-full flex items-center px-10 md:px-24">
+              <div className="max-w-4xl text-left">
+                <div className="mb-6 inline-block px-4 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 backdrop-blur-md">
+                  <span className="text-[10px] font-black tracking-[0.4em] uppercase text-cyan-300">
                     Official Village Portal
                   </span>
                 </div>
                 
-                <h1 className="text-6xl md:text-9xl font-[1000] text-white uppercase tracking-tighter leading-[0.8] mb-6 drop-shadow-2xl">
+                <h1 className="text-6xl md:text-[120px] font-[1000] text-white uppercase tracking-tighter leading-[0.8] mb-8 drop-shadow-2xl">
                   Selamat <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-emerald-500">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500">
                     Datang
                   </span>
                 </h1>
 
-                <p className="text-xl md:text-3xl font-black italic text-white/90 mb-8 border-l-4 border-green-500 pl-4">
-                  DI DESA PARIT
+                <p className="text-xl md:text-4xl font-black italic text-white/90 mb-8 border-l-4 border-cyan-400 pl-6 uppercase tracking-tight">
+                  Di Desa Terusan Muara
                 </p>
 
-                <p className="text-sm md:text-lg text-white/70 font-medium max-w-md leading-relaxed">
-                  "Membangun Desa yang Mandiri, Sejahtera, dan Berbasis Digital"
+                <p className="text-sm md:text-xl text-slate-300 font-medium max-w-lg leading-relaxed">
+                  "Membangun Desa yang Mandiri, Sejahtera, dan Berbasis Digital Menuju Banyuasin Maju"
                 </p>
               </div>
             </div>
@@ -62,19 +75,18 @@ export default function HeroSlider({ photos }: { photos: any }) {
         ))}
       </Swiper>
       
-      {/* Wave Decoration di bawah (Ciri Khas Web Desa Parit) */}
+      {/* Wave Decoration */}
       <div className="absolute bottom-0 left-0 right-0 z-30 pointer-events-none">
-        <svg viewBox="0 0 1440 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto translate-y-4">
-          <path d="M0,160 C480,320 960,0 1440,160 L1440,320 L0,320 Z" fill="white"/>
+        <svg viewBox="0 0 1440 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto translate-y-6">
+          <path d="M0,160 C480,320 960,0 1440,160 L1440,320 L0,320 Z" fill="#f8fafc"/>
         </svg>
       </div>
 
-      {/* Custom CSS untuk Navigation Swiper agar lebih estetik */}
       <style jsx global>{`
-        .swiper-button-next, .swiper-button-prev { color: white !important; transform: scale(0.5); opacity: 0.5; transition: 0.3s; }
-        .swiper-button-next:hover, .swiper-button-prev:hover { opacity: 1; transform: scale(0.6); }
+        .swiper-button-next, .swiper-button-prev { color: #67e8f9 !important; transform: scale(0.6); opacity: 0.6; transition: 0.3s; }
+        .swiper-button-next:hover, .swiper-button-prev:hover { opacity: 1; transform: scale(0.7); }
         .swiper-pagination-bullet { background: white !important; opacity: 0.3; }
-        .swiper-pagination-bullet-active { background: #22c55e !important; opacity: 1; width: 30px; border-radius: 10px; transition: 0.3s; }
+        .swiper-pagination-bullet-active { background: #67e8f9 !important; opacity: 1; width: 40px; border-radius: 10px; transition: 0.3s; }
       `}</style>
     </section>
   );

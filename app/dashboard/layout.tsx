@@ -3,70 +3,81 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase"; // Import Supabase
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [isSidebarOpen, setSidebarOpen] = useState(true);
 
-  // --- 1. PROTEKSI HALAMAN (SINKRONISASI KUNCI) ---
+  // --- 1. PROTEKSI HALAMAN (Supabase Auth Version) ---
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-    if (!isLoggedIn) {
-      router.push("/login");
-    }
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      // Kalau nggak ada session aktif, langsung tendang ke login
+      if (!session) {
+        // Hapus sisa-sisa cookie biar gak terjadi infinite loop
+        document.cookie = "isLoggedIn=; Max-Age=0; path=/"; 
+        router.push("/login");
+      }
+    };
+    
+    checkSession();
   }, [router]);
 
-  // --- 2. HANDLE LOGOUT (BERSIHKAN SEMUA SESSION) ---
-  const handleLogout = () => {
+  // --- 2. HANDLE LOGOUT (Real Auth Logout) ---
+  const handleLogout = async () => {
     if (confirm("Apakah Anda yakin ingin keluar dari panel admin?")) {
+      // 1. Logout dari Supabase (Ini yang paling penting!)
+      await supabase.auth.signOut();
+      
+      // 2. Bersihkan Cookie & LocalStorage cara lama lo
       localStorage.removeItem("isLoggedIn");
-      // Hapus cookie agar middleware Next.js juga tahu user sudah keluar
       document.cookie = "isLoggedIn=; Max-Age=0; path=/"; 
-      router.push("/login");
+      
+      // 3. Balik ke login
+      router.push("/");
     }
   };
 
   return (
-    <div className="flex h-screen bg-gray-100 font-sans">
+    <div className="flex h-screen bg-slate-50 font-sans text-slate-900">
       
-      {/* SIDEBAR DENGAN TEMA HIJAU DESA PARIT */}
-      <aside className={`bg-green-900 text-white w-64 flex-shrink-0 transition-all duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-64"} fixed md:relative z-30 h-full overflow-y-auto`}>
-        <div className="p-6 border-b border-green-800 flex items-center gap-3">
-           <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-green-900 font-bold shadow-lg">
-             P
+      {/* SIDEBAR - TAMPILAN TETAP SAMA */}
+      <aside className={`bg-slate-900 text-white w-72 flex-shrink-0 transition-all duration-500 ${isSidebarOpen ? "translate-x-0" : "-translate-x-72"} fixed md:relative z-30 h-full overflow-y-auto border-r border-white/5 shadow-2xl`}>
+        <div className="p-8 border-b border-white/5 flex items-center gap-4 bg-slate-950/50">
+           <div className="w-12 h-12 bg-cyan-400 rounded-2xl flex items-center justify-center text-slate-900 font-[1000] shadow-lg shadow-cyan-400/20 transform -rotate-6">
+             TM
            </div>
            <div>
-             <h2 className="font-bold text-sm">Admin Panel</h2>
-             <p className="text-[10px] text-green-300 uppercase font-black tracking-widest">Desa Parit</p>
+             <h2 className="font-black text-sm uppercase tracking-tighter">Admin <span className="text-cyan-400">Panel</span></h2>
+             <p className="text-[9px] text-slate-500 uppercase font-black tracking-[0.2em]">Desa Terusan Muara</p>
            </div>
         </div>
 
-        <nav className="p-4 space-y-1">
-          <p className="px-4 text-[10px] font-black text-green-500 uppercase tracking-[0.2em] mb-2 mt-4 opacity-50">Main Menu</p>
-          <Link href="/dashboard" className="flex items-center gap-3 px-4 py-3 bg-green-800 rounded-xl text-white hover:bg-[#c1eb91] hover:text-green-900 transition-all shadow-sm">
-            <span>🏠</span> <span>Dashboard</span>
+        <nav className="p-6 space-y-2">
+          <p className="px-4 text-[9px] font-black text-slate-500 uppercase tracking-[0.4em] mb-4 mt-4">Utama</p>
+          <Link href="/dashboard" className="flex items-center gap-4 px-5 py-4 bg-slate-800/50 rounded-2xl text-white hover:bg-cyan-400 hover:text-slate-900 transition-all duration-300 shadow-sm font-bold group">
+            <span className="text-xl group-hover:scale-110 transition-transform">🏠</span> <span>Dashboard</span>
           </Link>
           
-          <p className="px-4 text-[10px] font-black text-green-500 uppercase tracking-[0.2em] mb-2 mt-6 opacity-50">Konten Website</p>
+          <p className="px-4 text-[9px] font-black text-slate-500 uppercase tracking-[0.4em] mb-4 mt-10">Konten Digital</p>
           
-          <Link href="/dashboard/berita" className="flex items-center gap-3 px-4 py-3 hover:bg-[#c1eb91] hover:text-green-900 rounded-xl transition-all text-green-100 group">
-            <span className="group-hover:scale-125 transition-transform">📰</span> <span>Berita Desa</span>
-          </Link>
-          <Link href="/dashboard/perangkat" className="flex items-center gap-3 px-4 py-3 hover:bg-[#c1eb91] hover:text-green-900 rounded-xl transition-all text-green-100 group">
-            <span className="group-hover:scale-125 transition-transform">👔</span> <span>Perangkat Desa</span>
-          </Link>
-          <Link href="/dashboard/potensi" className="flex items-center gap-3 px-4 py-3 hover:bg-[#c1eb91] hover:text-green-900 rounded-xl transition-all text-green-100 group">
-            <span className="group-hover:scale-125 transition-transform">🌾</span> <span>Potensi Desa</span>
-          </Link>
-          <Link href="/dashboard/slider" className="flex items-center gap-3 px-4 py-3 hover:bg-[#c1eb91] hover:text-green-900 rounded-xl transition-all text-green-100 group">
-            <span className="group-hover:scale-125 transition-transform">🖼️</span> <span>Manajemen Slider</span>
-          </Link>
-          <Link href="/dashboard/profil" className="flex items-center gap-3 px-4 py-3 hover:bg-[#c1eb91] hover:text-green-900 rounded-xl transition-all text-green-100 group">
-            <span className="group-hover:scale-125 transition-transform">🏛️</span> <span>Profil & Sejarah</span>
-          </Link>
+          {[
+            { href: "/dashboard/berita", icon: "📰", label: "Berita Desa" },
+            { href: "/dashboard/perangkat", icon: "👔", label: "Perangkat Desa" },
+            { href: "/dashboard/potensi", icon: "💎", label: "Potensi Desa" },
+            { href: "/dashboard/slider", icon: "🖼️", label: "Manajemen Slider" },
+            { href: "/dashboard/profil", icon: "🏛️", label: "Profil & Sejarah" },
+          ].map((item) => (
+            <Link key={item.href} href={item.href} className="flex items-center gap-4 px-5 py-4 hover:bg-cyan-400 hover:text-slate-900 rounded-2xl transition-all duration-300 text-slate-400 font-bold group">
+              <span className="text-xl group-hover:scale-125 transition-transform duration-500">{item.icon}</span> 
+              <span className="tracking-tight">{item.label}</span>
+            </Link>
+          ))}
 
-          <div className="pt-10">
-            <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 bg-red-500/10 hover:bg-red-600 rounded-xl transition-all text-red-400 hover:text-white font-bold">
+          <div className="pt-16">
+            <button onClick={handleLogout} className="w-full flex items-center gap-4 px-5 py-4 bg-red-500/10 hover:bg-red-500 rounded-2xl transition-all duration-300 text-red-400 hover:text-white font-black uppercase text-[14px] tracking-widest shadow-inner">
               <span>🚪</span> <span>Logout</span>
             </button>
           </div>
@@ -75,22 +86,30 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* MAIN CONTENT AREA */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="bg-white shadow-sm h-16 flex items-center px-6 justify-between border-b border-gray-100">
-          <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 font-bold">
+        <header className="bg-white/80 backdrop-blur-md h-20 flex items-center px-8 justify-between border-b border-slate-100 relative z-20">
+          <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="w-10 h-10 flex items-center justify-center bg-slate-50 hover:bg-slate-900 hover:text-cyan-300 rounded-xl transition-all text-slate-400 font-bold shadow-sm">
             {isSidebarOpen ? '❮' : '☰'}
           </button>
-          <div className="flex items-center gap-4">
-            {/* PERBAIKAN: Header tidak kosong lagi */}
+          
+          <div className="flex items-center gap-6">
             <div className="text-right hidden sm:block">
-              <p className="text-xs font-black text-gray-900 uppercase">Administrator</p>
-              <p className="text-[10px] text-green-600 font-bold uppercase tracking-widest">KKN Desa Parit Aktif</p>
+              <p className="text-[10px] font-black text-slate-900 uppercase tracking-tighter">Admin</p>
+              <p className="text-[9px] text-cyan-600 font-black uppercase tracking-[0.2em] mt-0.5">Administrator Aktif</p>
             </div>
-            <div className="w-8 h-8 bg-gradient-to-tr from-green-500 to-emerald-400 rounded-full border-2 border-white shadow-sm"></div>
+            <div className="relative">
+              <div className="w-12 h-12 bg-slate-900 rounded-2xl border-2 border-white shadow-xl flex items-center justify-center text-cyan-400 font-bold uppercase">
+                {/* Ambil huruf pertama nama lo Jak */}
+                Z
+              </div>
+              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-cyan-400 border-2 border-white rounded-full"></div>
+            </div>
           </div>
         </header>
 
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50/50 p-4 md:p-8">
-          {children}
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-slate-50/50 p-6 md:p-12">
+          <div className="max-w-7xl mx-auto">
+            {children}
+          </div>
         </main>
       </div>
     </div>

@@ -1,19 +1,24 @@
 "use client";
 
-import { getProfil } from "@/lib/contentful";
-import { uploadHeroPhotoAction } from "@/lib/actions";
 import { useState, useEffect } from "react";
+import { uploadHeroPhotoAction, deleteSlider } from "@/lib/actions"; // Pastiin path import ini bener ya Jak
+import { supabase } from "@/lib/supabase";
+import { Trash2, Image as ImageIcon } from "lucide-react"; // Pake icon lucide biar sangar
 
 export default function HalamanSlider() {
   const [listFoto, setListFoto] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // --- 1. FUNGSI AMBIL DATA SECARA LIVE ---
+  // --- 1. FUNGSI AMBIL DATA LIVE ---
   async function fetchPhotos() {
     try {
-      const data = await getProfil();
-      // Mengambil array fotoHero dari fields Profil Desa
-      setListFoto((data?.fields?.fotoHero || []) as any[]);
+      const { data, error } = await supabase
+        .from("slider_beranda")
+        .select("*")
+        .order("id", { ascending: false });
+      
+      if (error) throw error;
+      setListFoto(data || []);
     } catch (error) {
       console.error("Gagal sinkron slider:", error);
     }
@@ -23,84 +28,115 @@ export default function HalamanSlider() {
     fetchPhotos();
   }, []);
 
-  // --- 2. HANDLE UPLOAD (DENGAN JEDA SINKRONISASI) ---
+  // --- 2. HANDLE UPLOAD ---
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     
-    const formData = new FormData(e.currentTarget);
-    // Memanggil action pusat di lib/actions.ts
+    const target = e.currentTarget;
+    const formData = new FormData(target);
     const res = await uploadHeroPhotoAction(formData);
     
     if (res?.success) {
       alert("✅ Foto Berhasil Terbit ke Beranda!");
-      e.currentTarget.reset();
-      
-      // JEDA SINKRONISASI: Menunggu Contentful memproses Asset baru
-      setTimeout(async () => {
-        await fetchPhotos(); 
-        setLoading(false);
-      }, 2000);
+      target.reset();
+      await fetchPhotos(); 
     } else {
       alert("❌ Gagal: " + (res?.message || "Terjadi kesalahan"));
-      setLoading(false);
+    }
+    setLoading(false);
+  };
+
+  // --- 3. HANDLE DELETE ---
+  const handleDelete = async (id: number) => {
+    if (confirm("Yakin mau hapus foto dokumentasi ini, Jak?")) {
+      try {
+        await deleteSlider(id);
+        alert("🗑️ Foto berhasil dihapus!");
+        await fetchPhotos(); // Refresh list biar langsung ilang dari dashboard
+      } catch (err: any) {
+        alert("Gagal hapus: " + err.message);
+      }
     }
   };
 
   return (
-    <div className="p-8 bg-white rounded-[40px] shadow-sm border border-gray-100 text-black">
+    <div className="p-8 bg-white rounded-[40px] shadow-sm border border-slate-100 text-slate-900">
       <div className="mb-10">
-        <h1 className="text-3xl font-black uppercase tracking-tighter text-gray-900 italic">
-          🖼️ Manajemen Slider Beranda
+        <h1 className="text-3xl font-[1000] uppercase tracking-tighter text-slate-900 italic">
+          🖼️ Manajemen <span className="text-cyan-600">Slider Beranda</span>
         </h1>
-        <p className="text-gray-600 font-bold">
-          Tambah atau lihat foto kegiatan KKN yang tampil di depan.
+        <p className="text-slate-500 font-bold mt-2">
+          Kelola foto dokumentasi Desa Terusan Muara yang tampil di slider utama.
         </p>
       </div>
       
-      {/* Form Upload dengan border putus-putus */}
-      <form onSubmit={handleSubmit} className="mb-12 p-8 bg-green-50 rounded-[35px] border-2 border-dashed border-green-200">
+      {/* FORM UPLOAD */}
+      <form onSubmit={handleSubmit} className="mb-12 p-10 bg-slate-50 rounded-[45px] border-4 border-dashed border-slate-200 group hover:border-cyan-200 transition-colors">
         <input 
           type="file" 
           name="fotoHero" 
           required 
-          className="mb-6 block w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-6 file:rounded-2xl file:border-0 file:bg-green-600 file:text-white file:font-black hover:file:bg-green-700 transition cursor-pointer" 
+          className="mb-8 block w-full text-sm text-slate-500 file:mr-6 file:py-3 file:px-8 file:rounded-2xl file:border-0 file:bg-slate-900 file:text-cyan-400 file:font-black hover:file:bg-black transition-all cursor-pointer" 
         />
         <button 
           disabled={loading} 
           type="submit" 
-          className="bg-green-600 hover:bg-green-700 text-white font-black py-4 px-10 rounded-2xl transition uppercase text-xs tracking-[0.2em] shadow-lg active:scale-95 disabled:opacity-50"
+          className="bg-cyan-300 hover:bg-slate-900 hover:text-cyan-300 text-slate-900 font-black py-4 px-12 rounded-2xl transition-all uppercase text-xs tracking-[0.3em] shadow-xl shadow-cyan-300/20 active:scale-95 disabled:opacity-50"
         >
           {loading ? "⌛ SEDANG MEMPROSES..." : "🚀 TERBITKAN KE BERANDA"}
         </button>
       </form>
 
-      <h2 className="text-[10px] font-black text-gray-400 mb-6 uppercase tracking-[0.3em]">
-        Foto yang sedang tayang:
-      </h2>
+      <div className="flex items-center gap-4 mb-8">
+        <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] whitespace-nowrap">
+          Live Preview Slider
+        </h2>
+        <div className="h-px w-full bg-slate-100"></div>
+      </div>
       
-      {/* Grid Preview Foto Slider */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      {/* LIST FOTO SLIDER */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {listFoto.length > 0 ? (
-          listFoto.map((foto: any, i: number) => (
-            <div key={i} className="group relative h-44 bg-gray-100 rounded-[30px] overflow-hidden border border-gray-100 shadow-sm">
-              {foto.fields?.file?.url ? (
-                <img 
-                  src={`https:${foto.fields.file.url}`} 
-                  className="h-full w-full object-cover group-hover:scale-110 transition duration-[1500ms]" 
-                  alt="Slider Desa" 
-                />
+          listFoto.map((foto) => (
+            <div key={foto.id} className="group relative h-60 bg-slate-100 rounded-[35px] overflow-hidden border border-slate-200 shadow-lg hover:shadow-cyan-500/10 transition-all duration-500">
+              {foto.foto_url ? (
+                <>
+                  <img 
+                    src={foto.foto_url} 
+                    className="h-full w-full object-cover group-hover:scale-110 transition duration-[2000ms] grayscale-[20%] group-hover:grayscale-0" 
+                    alt="Slider Desa" 
+                  />
+                  
+                  {/* TOMBOL DELETE - MUNCUL PAS HOVER */}
+                  <button
+                    onClick={() => handleDelete(foto.id)}
+                    className="absolute top-4 right-4 z-20 p-3 bg-red-500 hover:bg-slate-900 text-white rounded-2xl shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+
+                  {/* OVERLAY INFO */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-6">
+                    <span className="text-[9px] font-black text-cyan-300 uppercase tracking-widest bg-slate-900/80 px-4 py-2 rounded-full backdrop-blur-sm">
+                      Aktif di Beranda
+                    </span>
+                  </div>
+                </>
               ) : (
-                <div className="h-full w-full flex items-center justify-center text-gray-400 text-[10px] font-black italic uppercase">
-                  Gambar Tidak Ditemukan
+                <div className="h-full w-full flex flex-col items-center justify-center text-slate-400 gap-2">
+                  <ImageIcon size={32} className="opacity-20" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Broken Image</span>
                 </div>
               )}
             </div>
           ))
         ) : (
-          <p className="text-gray-400 font-bold col-span-full italic py-10 text-center bg-gray-50 rounded-3xl">
-            📭 Belum ada foto yang tayang di slider...
-          </p>
+          <div className="col-span-full py-20 text-center bg-slate-50 rounded-[40px] border-4 border-dashed border-slate-100">
+            <p className="text-slate-400 font-black uppercase tracking-widest text-xs">
+              📭 Belum ada foto yang tayang...
+            </p>
+          </div>
         )}
       </div>
     </div>

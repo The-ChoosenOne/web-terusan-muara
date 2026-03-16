@@ -2,33 +2,35 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <div className="relative bg-blue-900 h-[500px] flex items-center justify-center text-center text-white">
+    // Menggunakan Slate-800 sebagai dasar agar transisi dari Navbar Slate-800 terasa mulus
+    <div className="relative bg-slate-800 h-[500px] flex items-center justify-center text-center text-white overflow-hidden">
       
-      {/* Gambar Background (Ceritanya ini foto Desa Parit) */}
+      {/* Gambar Background dengan Overlay Gradasi agar teks tetap terbaca jelas */}
       <div 
-        className="absolute inset-0 bg-cover bg-center opacity-40"
+        className="absolute inset-0 bg-cover bg-center opacity-40 scale-105 transition-transform duration-1000"
         style={{ backgroundImage: "url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1932&auto=format&fit=crop')" }}
       ></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 to-slate-800/20"></div>
 
-      {/* Teks di tengah */}
-      <div className="relative z-10 px-4 max-w-4xl mx-auto">
-        <h1 className="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg">
-          Selamat Datang di Desa Parit
+      {/* Teks di tengah dengan animasi fade-in sederhana */}
+      <div className="relative z-10 px-4 max-w-5xl mx-auto">
+        <h1 className="text-4xl md:text-7xl font-extrabold mb-6 drop-shadow-2xl tracking-tight">
+          Selamat Datang di <span className="text-cyan-300">Desa Terusan Muara</span>
         </h1>
-        <p className="text-lg md:text-xl mb-8 text-gray-200 drop-shadow-md">
-          Membangun Desa yang Mandiri, Sejahtera, dan Berbudaya Menuju Ogan Ilir Bangkit.
+        <p className="text-lg md:text-2xl mb-10 text-slate-200 drop-shadow-md max-w-3xl mx-auto leading-relaxed">
+          Membangun Desa yang Mandiri, Sejahtera, dan Berbudaya Menuju Banyuasin yang Lebih Maju.
         </p>
         
-        <div className="space-x-4">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-4">
           <Link 
             href="/profil" 
-            className="px-6 py-3 bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-bold rounded-full transition shadow-lg"
+            className="w-full md:w-auto px-8 py-4 bg-cyan-300 hover:bg-cyan-200 text-slate-900 font-extrabold rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(103,232,249,0.3)] hover:scale-105"
           >
             Tentang Kami
           </Link>
           <Link 
             href="#berita" 
-            className="px-6 py-3 bg-white hover:bg-gray-100 text-blue-900 font-bold rounded-full transition shadow-lg"
+            className="w-full md:w-auto px-8 py-4 bg-white/10 backdrop-blur-md hover:bg-white/20 text-white font-extrabold rounded-xl border border-white/20 transition-all duration-300 hover:scale-105"
           >
             Baca Berita
           </Link>

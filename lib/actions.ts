@@ -1,328 +1,214 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { supabaseAdmin } from "./supabaseAdmin";
+import { supabase } from "@/lib/supabase"; // Sesuaikan path-nya ke file config supabase lo
 
-// KONFIGURASI UTAMA - PAKAI TOKEN 'Token_Admin_Final'
-const SPACE_ID = "5f4zyycfroy7"; 
-const MGMT_TOKEN = "CFPAT-TzHZtkLjDW5yJumhfhPJDZUKc889BipB97dqvZIwos0"; 
-
-// --- 1. FUNGSI UPLOAD ASSET (UNTUK SEMUA FITUR) ---
-async function uploadAsset(file: File) {
+// --- FUNGSI HELPER: UPLOAD FOTO ---
+async function uploadFoto(file: File, folder: string) {
   if (!file || file.size === 0 || typeof file === "string") return null;
-  try {
-    const uploadRes = await fetch(`https://upload.contentful.com/spaces/${SPACE_ID}/uploads`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${MGMT_TOKEN}`,
-        "Content-Type": "application/octet-stream",
-      },
-      body: await file.arrayBuffer(),
-    });
-    const uploadData = await uploadRes.json();
+  
+  // WAJIB PAKE BACKTICK (``) BUKAN KUTIP SATU ('')
+  const fileName = `${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
+  const filePath = `${folder}/${fileName}`;
 
-    const assetRes = await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/assets`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${MGMT_TOKEN}`,
-        "Content-Type": "application/vnd.contentful.management.v1+json",
-      },
-      body: JSON.stringify({
-        fields: {
-          title: { "en-US": file.name },
-          file: {
-            "en-US": {
-              contentType: file.type,
-              fileName: file.name,
-              uploadFrom: { sys: { type: "Link", linkType: "Upload", id: uploadData.sys.id } },
-            },
-          },
-        },
-      }),
-    });
-    const assetData = await assetRes.json();
-    const assetId = assetData.sys.id;
+  const { data, error } = await supabaseAdmin.storage
+    .from("desa-assets")
+    .upload(filePath, file);
 
-    await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/assets/${assetId}/process`, {
-      method: "PUT",
-      headers: { Authorization: `Bearer ${MGMT_TOKEN}` },
-    });
-
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/assets/${assetId}/published`, {
-      method: "PUT",
-      headers: { Authorization: `Bearer ${MGMT_TOKEN}`, "X-Contentful-Version": "1" },
-    });
-
-    return assetId;
-  } catch (error) {
-    console.error("Upload Gagal:", error);
+  if (error) {
+    console.error("Gagal Upload ke Storage:", error.message);
     return null;
   }
+
+  const res = supabaseAdmin.storage.from("desa-assets").getPublicUrl(filePath);
+  return res.data.publicUrl;
 }
 
-// --- 2. FITUR PERANGKAT DESA ---
+// --- 1. FITUR PERANGKAT DESA ---
 export async function tambahPerangkatAction(formData: FormData) {
   try {
-    const assetId = await uploadAsset(formData.get("fotoPerangkat") as File);
-    const response = await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${MGMT_TOKEN}`,
-        "X-Contentful-Content-Type": "perangkatDesa",
-        "Content-Type": "application/vnd.contentful.management.v1+json",
-      },
-      body: JSON.stringify({
-        fields: {
-          namaPerangkat: { "en-US": formData.get("namaPerangkat") },
-          jabatan: { "en-US": formData.get("jabatan") },
-          fotoPerangkat: assetId ? { "en-US": { sys: { type: "Link", linkType: "Asset", id: assetId } } } : undefined,
-        },
-      }),
-    });
-    const data = await response.json();
-    await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries/${data.sys.id}/published`, {
-      method: "PUT",
-      headers: { Authorization: `Bearer ${MGMT_TOKEN}`, "X-Contentful-Version": "1" },
-    });
+    const fotoUrl = await uploadFoto(formData.get("fotoPerangkat") as File, "perangkat");
+    const { error } = await supabaseAdmin.from("perangkat_desa").insert([{
+      nama: formData.get("namaPerangkat"),
+      jabatan: formData.get("jabatan"),
+      foto_url: fotoUrl
+    }]);
+    if (error) throw error;
     revalidatePath("/dashboard/perangkat");
-    return { success: true, message: "Perangkat Berhasil Ditambahkan!" };
+    revalidatePath("/profil");
+    return { success: true, message: "Berhasil tambah perangkat!" };
   } catch (error: any) { return { success: false, message: error.message }; }
 }
 
 export async function updatePerangkat(id: string, formData: FormData) {
   try {
-    const getRes = await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries/${id}`, {
-      headers: { Authorization: `Bearer ${MGMT_TOKEN}` },
-    });
-    const entryLama = await getRes.json();
-    const assetId = await uploadAsset(formData.get("fotoPerangkat") as File);
-
-    const updateRes = await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries/${id}`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${MGMT_TOKEN}`,
-        "X-Contentful-Version": entryLama.sys.version.toString(),
-        "Content-Type": "application/vnd.contentful.management.v1+json",
-      },
-      body: JSON.stringify({
-        fields: {
-          namaPerangkat: { "en-US": formData.get("namaPerangkat") },
-          jabatan: { "en-US": formData.get("jabatan") },
-          fotoPerangkat: assetId ? { "en-US": { sys: { type: "Link", linkType: "Asset", id: assetId } } } : entryLama.fields.fotoPerangkat,
-        },
-      }),
-    });
-    const dataBaru = await updateRes.json();
-    await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries/${id}/published`, { method: "PUT", headers: { Authorization: `Bearer ${MGMT_TOKEN}`, "X-Contentful-Version": dataBaru.sys.version.toString() } });
+    const fotoBaru = formData.get("fotoPerangkat") as File;
+    let updateData: any = { 
+        nama: formData.get("namaPerangkat"), 
+        jabatan: formData.get("jabatan") 
+    };
+    if (fotoBaru && fotoBaru.size > 0) {
+      const url = await uploadFoto(fotoBaru, "perangkat");
+      if (url) updateData.foto_url = url;
+    }
+    const { error } = await supabaseAdmin.from("perangkat_desa").update(updateData).eq("id", id);
+    if (error) throw error;
     revalidatePath("/dashboard/perangkat");
-    return { success: true, message: "Data Diperbarui!" };
+    revalidatePath("/profil");
+    return { success: true, message: "Berhasil update!" };
   } catch (error: any) { return { success: false, message: error.message }; }
 }
 
 export async function deletePerangkat(id: string) {
   try {
-    await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries/${id}/published`, { method: "DELETE", headers: { Authorization: `Bearer ${MGMT_TOKEN}` } });
-    await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${MGMT_TOKEN}` } });
+    const { error } = await supabaseAdmin.from("perangkat_desa").delete().eq("id", id);
+    if (error) throw error;
     revalidatePath("/dashboard/perangkat");
-    return { success: true, message: "Berhasil Dihapus!" };
+    return { success: true, message: "Berhasil dihapus!" };
   } catch (error: any) { return { success: false, message: error.message }; }
 }
 
-// --- 3. FITUR BERITA ---
+// --- 2. FITUR BERITA ---
 export async function tambahBeritaAction(formData: FormData) {
   try {
     const judul = formData.get("judul") as string;
-    const assetId = await uploadAsset(formData.get("gambarUtama") as File);
-    const response = await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${MGMT_TOKEN}`,
-        "X-Contentful-Content-Type": "beritabaru",
-        "Content-Type": "application/vnd.contentful.management.v1+json",
-      },
-      body: JSON.stringify({
-        fields: {
-          judul: { "en-US": judul },
-          slug: { "en-US": judul.toLowerCase().replace(/[^a-z0-9]+/g, "-") + "-" + Date.now() },
-          tanggalpost: { "en-US": formData.get("tanggal") || new Date().toISOString() },
-          gambarUtama: assetId ? { "en-US": { sys: { type: "Link", linkType: "Asset", id: assetId } } } : undefined,
-          konten: { "en-US": { nodeType: "document", data: {}, content: [] } },
-        },
-      }),
-    });
-    const data = await response.json();
-    await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries/${data.sys.id}/published`, {
-      method: "PUT",
-      headers: { Authorization: `Bearer ${MGMT_TOKEN}`, "X-Contentful-Version": "1" },
-    });
+    // Samain nama field gambarUtama sesuai form dashboard berita lo
+    const fotoUrl = await uploadFoto(formData.get("gambar_utama") as File, "berita");
+    
+    const { error } = await supabaseAdmin.from("berita").insert([{
+      judul,
+      slug: judul.toLowerCase().replace(/[^a-z0-9]+/g, "-") + "-" + Date.now(),
+      tanggal: formData.get("tanggal") || new Date().toISOString(),
+      foto_url: fotoUrl,
+      // Samain nama field konten_lengkap sesuai textarea dashboard berita lo
+      konten: formData.get("konten_lengkap"),
+      deskripsi: formData.get("deskripsi")
+    }]);
+    
+    if (error) throw error;
     revalidatePath("/dashboard/berita");
-    return { success: true, message: "Berita Berhasil Terbit!" };
+    revalidatePath("/berita");
+    return { success: true, message: "Berita berhasil terbit! 🚀" };
   } catch (error: any) { return { success: false, message: error.message }; }
 }
 
 export async function deleteBerita(id: string) {
   try {
-    await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries/${id}/published`, { method: "DELETE", headers: { Authorization: `Bearer ${MGMT_TOKEN}` } });
-    await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${MGMT_TOKEN}` } });
+    const { error } = await supabaseAdmin.from("berita").delete().eq("id", id);
+    if (error) throw error;
     revalidatePath("/dashboard/berita");
-    return { success: true, message: "Berita Dihapus!" };
+    revalidatePath("/berita");
+    return { success: true, message: "Berita dihapus!" };
   } catch (error: any) { return { success: false, message: error.message }; }
 }
 
-// --- 4. FITUR POTENSI ---
+// --- 3. FITUR POTENSI ---
 export async function createPotensiAction(formData: FormData) {
   try {
-    const assetId = await uploadAsset(formData.get("fotoPotensi") as File);
-    const response = await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${MGMT_TOKEN}`,
-        "X-Contentful-Content-Type": "potensiDesa",
-        "Content-Type": "application/vnd.contentful.management.v1+json",
-      },
-      body: JSON.stringify({
-        fields: {
-          namaPotensi: { "en-US": formData.get("namaPotensi") },
-          kategori: { "en-US": formData.get("kategori") },
-          deskripsi: { "en-US": formData.get("deskripsi") },
-          fotoPotensi: assetId ? { "en-US": { sys: { type: "Link", linkType: "Asset", id: assetId } } } : undefined,
-        },
-      }),
-    });
-    const data = await response.json();
-    await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries/${data.sys.id}/published`, {
-      method: "PUT",
-      headers: { Authorization: `Bearer ${MGMT_TOKEN}`, "X-Contentful-Version": "1" },
-    });
+    const fotoUrl = await uploadFoto(formData.get("fotoPotensi") as File, "potensi");
+    const { error } = await supabaseAdmin.from("potensi_desa").insert([{
+      nama_potensi: formData.get("namaPotensi"),
+      kategori: formData.get("kategori"),
+      deskripsi: formData.get("deskripsi"),
+      foto_url: fotoUrl
+    }]);
+    if (error) throw error;
     revalidatePath("/dashboard/potensi");
-    return { success: true, message: "Potensi Berhasil Disimpan!" };
+    revalidatePath("/potensi");
+    return { success: true, message: "Potensi berhasil disimpan!" };
   } catch (error: any) { return { success: false, message: error.message }; }
 }
 
 export async function updatePotensi(id: string, formData: FormData) {
   try {
-    const getRes = await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries/${id}`, { headers: { Authorization: `Bearer ${MGMT_TOKEN}` } });
-    const entryLama = await getRes.json();
-    const assetId = await uploadAsset(formData.get("fotoPotensi") as File);
-
-    const updateRes = await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries/${id}`, {
-      method: "PUT",
-      headers: { Authorization: `Bearer ${MGMT_TOKEN}`, "X-Contentful-Version": entryLama.sys.version.toString(), "Content-Type": "application/vnd.contentful.management.v1+json" },
-      body: JSON.stringify({
-        fields: {
-          namaPotensi: { "en-US": formData.get("namaPotensi") },
-          kategori: { "en-US": formData.get("kategori") },
-          deskripsi: { "en-US": formData.get("deskripsi") },
-          fotoPotensi: assetId ? { "en-US": { sys: { type: "Link", linkType: "Asset", id: assetId } } } : entryLama.fields.fotoPotensi,
-        },
-      }),
-    });
-    const dataBaru = await updateRes.json();
-    await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries/${id}/published`, { method: "PUT", headers: { Authorization: `Bearer ${MGMT_TOKEN}`, "X-Contentful-Version": dataBaru.sys.version.toString() } });
+    const fotoBaru = formData.get("fotoPotensi") as File;
+    let updateData: any = { 
+        nama_potensi: formData.get("namaPotensi"), 
+        kategori: formData.get("kategori"), 
+        deskripsi: formData.get("deskripsi") 
+    };
+    if (fotoBaru && fotoBaru.size > 0) {
+      const url = await uploadFoto(fotoBaru, "potensi");
+      if (url) updateData.foto_url = url;
+    }
+    const { error } = await supabaseAdmin.from("potensi_desa").update(updateData).eq("id", id);
+    if (error) throw error;
     revalidatePath("/dashboard/potensi");
-    return { success: true, message: "Potensi Diperbarui!" };
+    revalidatePath("/potensi");
+    return { success: true, message: "Potensi diupdate!" };
   } catch (error: any) { return { success: false, message: error.message }; }
 }
 
 export async function deletePotensi(id: string) {
   try {
-    await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries/${id}/published`, { method: "DELETE", headers: { Authorization: `Bearer ${MGMT_TOKEN}` } });
-    await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${MGMT_TOKEN}` } });
+    const { error } = await supabaseAdmin.from("potensi_desa").delete().eq("id", id);
+    if (error) throw error;
     revalidatePath("/dashboard/potensi");
-    return { success: true, message: "Potensi Dihapus!" };
+    return { success: true, message: "Potensi dihapus!" };
   } catch (error: any) { return { success: false, message: error.message }; }
 }
 
-// --- 5. FITUR PROFIL ---
+// --- 4. FITUR PROFIL DESA ---
 export async function updateProfilDesaAction(formData: FormData) {
   try {
-    const getEntries = await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries?content_type=profilDesa&limit=1`, { headers: { Authorization: `Bearer ${MGMT_TOKEN}` } });
-    const entries = await getEntries.json();
-    const entry = entries.items[0];
-    const assetId = await uploadAsset(formData.get("fotoKades") as File);
-
-    const updateRes = await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries/${entry.sys.id}`, {
-      method: "PUT",
-      headers: { Authorization: `Bearer ${MGMT_TOKEN}`, "X-Contentful-Version": entry.sys.version.toString(), "Content-Type": "application/vnd.contentful.management.v1+json" },
-      body: JSON.stringify({
-        fields: {
-          judulProfil: { "en-US": formData.get("judul") },
-          tagline: { "en-US": formData.get("tagline") },
-          jumlahPenduduk: { "en-US": Number(formData.get("penduduk")) },
-          kepalaKeluarga: { "en-US": Number(formData.get("kk")) },
-          luasWilayah: { "en-US": formData.get("luas") },
-          sejarah: { "en-US": formData.get("sejarah") },
-          visi: { "en-US": formData.get("visi") },
-          misi: { "en-US": formData.get("misi") },
-          namaKepalaDesa: { "en-US": formData.get("namaKades") },
-          judulSambutan: { "en-US": formData.get("judulSambutan") },
-          isiSambutan: { "en-US": formData.get("isiSambutan") },
-          fotoKepalaDesa: assetId ? { "en-US": { sys: { type: "Link", linkType: "Asset", id: assetId } } } : entry.fields.fotoKepalaDesa,
-        },
-      }),
-    });
-    const dataBaru = await updateRes.json();
-    await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries/${entry.sys.id}/published`, { method: "PUT", headers: { Authorization: `Bearer ${MGMT_TOKEN}`, "X-Contentful-Version": dataBaru.sys.version.toString() } });
+    const fotoKadesBaru = formData.get("foto_kades") as File;
+    let updateData: any = {
+      judul_profil: formData.get("judul_profil"),
+      tagline: formData.get("tagline"),
+      jumlah_penduduk: Number(formData.get("jumlah_penduduk")),
+      kepala_keluarga: Number(formData.get("kepala_keluarga")),
+      luas_wilayah: formData.get("luas_wilayah"),
+      sejarah: formData.get("sejarah"),
+      visi: formData.get("visi"),
+      misi: formData.get("misi"),
+      nama_kades: formData.get("nama_kades"),
+      judul_sambutan: formData.get("judul_sambutan"),
+      isi_sambutan: formData.get("isi_sambutan"),
+    };
+    
+    if (fotoKadesBaru && fotoKadesBaru.size > 0) {
+      const url = await uploadFoto(fotoKadesBaru, "profil");
+      if (url) updateData.foto_kades_url = url;
+    }
+    
+    const { error } = await supabaseAdmin.from("profil_desa").update(updateData).eq("id", 1);
+    if (error) throw error;
+    
     revalidatePath("/dashboard/profil");
     revalidatePath("/profil");
-    return { success: true, message: "Profil Berhasil Diperbarui!" };
-  } catch (error: any) { return { success: false, message: error.message }; }
+    return { success: true, message: "Profil Desa diperbarui!" };
+  } catch (error: any) { 
+      console.error("Eror Profil:", error.message);
+      return { success: false, message: error.message }; 
+  }
 }
-// --- 6. FITUR SLIDER BERANDA ---
+
+// --- 5. FITUR SLIDER BERANDA ---
 export async function uploadHeroPhotoAction(formData: FormData) {
-  const imageFile = formData.get("fotoHero") as File;
-  if (!imageFile || imageFile.size === 0) return { success: false, message: "Pilih foto dulu!" };
-
   try {
-    // A. Gunakan fungsi uploadAsset yang sudah ada di lib/actions.ts
-    const assetId = await uploadAsset(imageFile);
-
-    if (!assetId) throw new Error("Gagal upload gambar slider");
-
-    // B. Ambil data Profil Desa untuk mendapatkan daftar foto yang sudah ada
-    const getEntries = await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries?content_type=profilDesa&limit=1`, {
-      headers: { Authorization: `Bearer ${MGMT_TOKEN}` }
-    });
-    const entries = await getEntries.json();
-    const entry = entries.items[0];
-
-    // C. Ambil daftar foto lama, lalu tambahkan yang baru
-    const currentPhotos = entry.fields.fotoHero?.["en-US"] || [];
-    const newPhotos = [
-      ...currentPhotos,
-      { sys: { type: "Link", linkType: "Asset", id: assetId } }
-    ];
-
-    // D. Update Entry Profil Desa
-    const updateRes = await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries/${entry.sys.id}`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${MGMT_TOKEN}`,
-        "X-Contentful-Version": entry.sys.version.toString(),
-        "Content-Type": "application/vnd.contentful.management.v1+json",
-      },
-      body: JSON.stringify({
-        fields: {
-          ...entry.fields, // Jaga data lain (visi, misi, kades) agar tidak hilang
-          fotoHero: { "en-US": newPhotos },
-        },
-      }),
-    });
-
-    const dataBaru = await updateRes.json();
-
-    // E. Publish hasil update
-    await fetch(`https://api.contentful.com/spaces/${SPACE_ID}/environments/master/entries/${entry.sys.id}/published`, {
-      method: "PUT",
-      headers: { Authorization: `Bearer ${MGMT_TOKEN}`, "X-Contentful-Version": dataBaru.sys.version.toString() },
-    });
-
+    const fotoUrl = await uploadFoto(formData.get("fotoHero") as File, "slider");
+    if (!fotoUrl) return { success: false, message: "Gagal upload foto slider!" };
+    
+    const { error } = await supabaseAdmin.from("slider_beranda").insert([{ foto_url: fotoUrl }]);
+    if (error) throw error;
+    
     revalidatePath("/");
     revalidatePath("/dashboard/slider");
-    return { success: true, message: "Foto Berhasil Ditambahkan ke Slider! 🚀" };
-  } catch (error: any) {
-    console.error("Gagal Slider:", error);
-    return { success: false, message: error.message };
+    return { success: true, message: "Slider baru berhasil ditambahkan!" };
+  } catch (error: any) { return { success: false, message: error.message }; }
+}
+
+export async function deleteSlider(id: number) {
+  const { error } = await supabaseAdmin
+    .from("slider_beranda")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    throw new Error(error.message);
   }
+
+  revalidatePath("/dashboard/slider");
+  revalidatePath("/");
 }

@@ -1,26 +1,30 @@
 "use client";
 
 import { useState, useEffect } from "react";
-// Import fungsi sakti dari lib/actions
+// Import action yang sudah kita siapkan untuk Supabase
 import { updateProfilDesaAction } from "@/lib/actions";
-import { client } from "@/lib/contentful";
+import { supabase } from "@/lib/supabase";
 
 export default function DashboardProfil() {
   const [loading, setLoading] = useState(false);
   const [initialData, setInitialData] = useState<any>(null);
 
-  // --- 1. AMBIL DATA PROFIL AWAL (DENGAN PENGAMAN) ---
+  // --- 1. AMBIL DATA PROFIL DARI SUPABASE ---
   async function fetchProfil() {
     try {
-      // Pastikan Content Type ID adalah 'profilDesa'
-      const resProfil = await client.getEntries({ content_type: "profilDesa", limit: 1 });
+      // Kita ambil baris pertama (ID: 1) dari tabel profil_desa
+      const { data, error } = await supabase
+        .from("profil_desa")
+        .select("*")
+        .eq("id", 1)
+        .single();
       
-      // PENGAMAN: Cek apakah item ada sebelum di-set
-      if (resProfil && resProfil.items && resProfil.items.length > 0) {
-        setInitialData(resProfil.items[0].fields);
+      if (data) {
+        setInitialData(data);
       } else {
-        console.log("Data Profil Belum Ada di Contentful");
+        console.log("Data Profil Belum Ada di Supabase");
       }
+      if (error) throw error;
     } catch (error) {
       console.error("Gagal mengambil profil:", error);
     }
@@ -30,138 +34,141 @@ export default function DashboardProfil() {
     fetchProfil();
   }, []);
 
-  // --- 2. HANDLE SUBMIT (SINKRONISASI OTOMATIS) ---
+  // --- 2. HANDLE SUBMIT ---
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     const formData = new FormData(e.currentTarget);
     
-    // Panggil action dari lib/actions.ts
+    // Panggil action Supabase
     const result = await updateProfilDesaAction(formData);
     
     if (result.success) {
       alert("✅ " + result.message);
-      
-      // JEDA SINKRONISASI: Tunggu Contentful memproses data
-      setTimeout(async () => {
-        await fetchProfil(); 
-        setLoading(false);
-      }, 2000);
+      // Langsung refresh tanpa nunggu lama-lama
+      await fetchProfil(); 
     } else {
       alert("❌ Gagal: " + result.message);
-      setLoading(false);
     }
+    setLoading(false);
   };
 
-  // Tampilan loading awal jika data belum ditarik
+  // Tampilan loading awal
   if (!initialData && !loading) {
-    return <div className="p-20 text-center font-bold text-gray-400 animate-pulse italic">Menghubungkan ke database Desa...</div>;
+    return (
+      <div className="p-20 text-center flex flex-col items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500 mb-4"></div>
+        <p className="font-black text-slate-400 uppercase tracking-[0.3em] text-xs italic">Menghubungkan ke database Desa...</p>
+      </div>
+    );
   }
 
   return (
-    <div className="p-8 text-black bg-gray-50 min-h-screen">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-black text-green-800 uppercase tracking-tighter italic">🏢 Kelola Profil Lengkap Desa</h1>
-        <div className="bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-bold">
+    <div className="p-8 text-slate-900 bg-slate-50 min-h-screen">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
+        <h1 className="text-3xl font-[1000] text-slate-900 uppercase tracking-tighter italic">
+          🏢 Kelola <span className="text-cyan-600">Profil Lengkap</span> Desa
+        </h1>
+        <div className="bg-slate-900 text-cyan-300 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest border border-cyan-500/30">
           {loading ? "⌛ Sedang Sinkron..." : "✅ Mode Edit Aktif"}
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8 pb-32">
-        {/* SECTION 1: PROFIL UMUM */}
-        <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 space-y-6">
-          <h2 className="text-xl font-bold border-b pb-2 text-gray-700 flex items-center gap-2 uppercase tracking-widest text-xs">
-            📍 Informasi Umum
+      <form onSubmit={handleSubmit} className="space-y-10 pb-40">
+        {/* SECTION 1: PROFIL UMUM - SESUAIKAN NAME & DEFAULT VALUE */}
+        <div className="bg-white p-10 rounded-[40px] shadow-sm border border-slate-100 space-y-8">
+          <h2 className="text-xs font-black pb-4 text-slate-400 flex items-center gap-3 uppercase tracking-[0.3em] border-b border-slate-50">
+            <span className="text-cyan-500 text-lg">📍</span> Informasi Umum
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-              <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 ml-2">Judul Halaman Profil</label>
-              <input name="judul" defaultValue={initialData?.judulProfil} type="text" className="w-full border-2 border-gray-100 p-4 rounded-2xl text-black font-bold focus:border-green-500 outline-none transition-all bg-gray-50" required />
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Judul Halaman Profil</label>
+              <input name="judul_profil" defaultValue={initialData?.judul_profil} type="text" className="w-full border-2 border-slate-100 p-5 rounded-2xl text-slate-900 font-bold focus:border-cyan-400 focus:bg-white outline-none transition-all bg-slate-50/50" required />
             </div>
             <div>
-              <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 ml-2">Slogan Desa</label>
-              <input name="tagline" defaultValue={initialData?.tagline} type="text" className="w-full border-2 border-gray-100 p-4 rounded-2xl text-black font-bold focus:border-green-500 outline-none transition-all bg-gray-50" required />
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Slogan Desa</label>
+              <input name="tagline" defaultValue={initialData?.tagline} type="text" className="w-full border-2 border-slate-100 p-5 rounded-2xl text-slate-900 font-bold focus:border-cyan-400 focus:bg-white outline-none transition-all bg-slate-50/50" required />
             </div>
           </div>
         </div>
 
         {/* SECTION 2: STATISTIK DESA */}
-        <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-          <h2 className="text-xl font-bold border-b pb-2 mb-6 text-gray-700 flex items-center gap-2 uppercase tracking-widest text-xs">
-            📊 Statistik Wilayah (Tampil di Beranda)
+        <div className="bg-white p-10 rounded-[40px] shadow-sm border border-slate-100">
+          <h2 className="text-xs font-black pb-4 mb-8 text-slate-400 flex items-center gap-3 uppercase tracking-[0.3em] border-b border-slate-50">
+            <span className="text-cyan-500 text-lg">📊</span> Statistik Wilayah
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 ml-2">Jumlah Penduduk (Jiwa)</label>
-              <input name="penduduk" defaultValue={initialData?.jumlahPenduduk} type="number" className="w-full border-2 border-gray-100 p-4 rounded-2xl text-black font-bold bg-gray-50" required />
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Jumlah Penduduk (Jiwa)</label>
+              <input name="jumlah_penduduk" defaultValue={initialData?.jumlah_penduduk} type="number" className="w-full border-2 border-slate-100 p-5 rounded-2xl text-slate-900 font-bold bg-slate-50/50 focus:border-cyan-400 outline-none" required />
             </div>
             <div>
-              <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 ml-2">Jumlah KK</label>
-              <input name="kk" defaultValue={initialData?.kepalaKeluarga} type="number" className="w-full border-2 border-gray-100 p-4 rounded-2xl text-black font-bold bg-gray-50" required />
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Jumlah KK</label>
+              <input name="kepala_keluarga" defaultValue={initialData?.kepala_keluarga} type="number" className="w-full border-2 border-slate-100 p-5 rounded-2xl text-slate-900 font-bold bg-slate-50/50 focus:border-cyan-400 outline-none" required />
             </div>
             <div>
-              <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 ml-2">Luas Wilayah (Km²)</label>
-              <input name="luas" defaultValue={initialData?.luasWilayah} type="text" className="w-full border-2 border-gray-100 p-4 rounded-2xl text-black font-bold bg-gray-50" required />
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Luas Wilayah (Km²)</label>
+              <input name="luas_wilayah" defaultValue={initialData?.luas_wilayah} type="text" className="w-full border-2 border-slate-100 p-5 rounded-2xl text-slate-900 font-bold bg-slate-50/50 focus:border-cyan-400 outline-none" required />
             </div>
           </div>
         </div>
 
         {/* SECTION 3: SEJARAH & VISI MISI */}
-        <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 space-y-6">
-          <h2 className="text-xl font-bold border-b pb-2 text-gray-700 flex items-center gap-2 uppercase tracking-widest text-xs">
-            📖 Narasi Desa
+        <div className="bg-white p-10 rounded-[40px] shadow-sm border border-slate-100 space-y-8">
+          <h2 className="text-xs font-black pb-4 text-slate-400 flex items-center gap-3 uppercase tracking-[0.3em] border-b border-slate-50">
+            <span className="text-cyan-500 text-lg">📖</span> Narasi Desa
           </h2>
           <div>
-            <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 ml-2">Sejarah Lengkap Desa</label>
-            <textarea name="sejarah" defaultValue={initialData?.sejarah} rows={6} className="w-full border-2 border-gray-100 p-4 rounded-2xl text-black font-bold focus:border-green-500 outline-none transition-all bg-gray-50" required />
+            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Sejarah Lengkap Desa</label>
+            <textarea name="sejarah" defaultValue={initialData?.sejarah} rows={6} className="w-full border-2 border-slate-100 p-5 rounded-2xl text-slate-900 font-bold focus:border-cyan-400 focus:bg-white outline-none transition-all bg-slate-50/50" required />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-              <label className="block text-[10px] font-black text-green-700 uppercase tracking-widest mb-1 ml-2">🎯 Visi Desa</label>
-              <textarea name="visi" defaultValue={initialData?.visi} rows={4} className="w-full border-2 border-green-50 p-4 rounded-2xl text-black font-bold focus:border-green-500 transition shadow-inner bg-green-50/30" required />
+              <label className="block text-[10px] font-black text-cyan-700 uppercase tracking-widest mb-2 ml-2">🎯 Visi Desa</label>
+              <textarea name="visi" defaultValue={initialData?.visi} rows={5} className="w-full border-2 border-cyan-100 p-6 rounded-[30px] text-slate-900 font-bold focus:border-cyan-400 transition shadow-inner bg-cyan-50/30 outline-none" required />
             </div>
             <div>
-              <label className="block text-[10px] font-black text-yellow-700 uppercase tracking-widest mb-1 ml-2">🚀 Misi Desa</label>
-              <textarea name="misi" defaultValue={initialData?.misi} rows={4} className="w-full border-2 border-yellow-50 p-4 rounded-2xl text-black font-bold focus:border-yellow-500 transition shadow-inner bg-yellow-50/30" required />
+              <label className="block text-[10px] font-black text-slate-600 uppercase tracking-widest mb-2 ml-2">🚀 Misi Desa</label>
+              <textarea name="misi" defaultValue={initialData?.misi} rows={5} className="w-full border-2 border-slate-200 p-6 rounded-[30px] text-slate-900 font-bold focus:border-slate-400 transition shadow-inner bg-slate-50 outline-none" required />
             </div>
           </div>
         </div>
 
         {/* SECTION 4: SAMBUTAN KEPALA DESA */}
-        <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 space-y-6">
-          <h2 className="text-xl font-bold border-b pb-2 text-gray-700 flex items-center gap-2 uppercase tracking-widest text-xs">
-            👤 Sambutan Kepala Desa
+        <div className="bg-white p-10 rounded-[40px] shadow-sm border border-slate-100 space-y-8">
+          <h2 className="text-xs font-black pb-4 text-slate-400 flex items-center gap-3 uppercase tracking-[0.3em] border-b border-slate-50">
+            <span className="text-cyan-500 text-lg">👤</span> Sambutan Kepala Desa
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div className="space-y-6">
               <div>
-                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 ml-2">Nama Lengkap Kades</label>
-                <input name="namaKades" defaultValue={initialData?.namaKepalaDesa} type="text" className="w-full border-2 border-gray-100 p-4 rounded-2xl text-black font-bold bg-gray-50" required />
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Nama Lengkap Kades</label>
+                <input name="nama_kades" defaultValue={initialData?.nama_kades} type="text" className="w-full border-2 border-slate-100 p-5 rounded-2xl text-slate-900 font-bold bg-slate-50/50 focus:border-cyan-400 outline-none" required />
               </div>
               <div>
-                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 ml-2">Judul Sambutan</label>
-                <input name="judulSambutan" defaultValue={initialData?.judulSambutan} type="text" className="w-full border-2 border-gray-100 p-4 rounded-2xl text-black font-bold bg-gray-50" required />
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Judul Sambutan</label>
+                <input name="judul_sambutan" defaultValue={initialData?.judul_sambutan} type="text" className="w-full border-2 border-slate-100 p-5 rounded-2xl text-slate-900 font-bold bg-slate-50/50 focus:border-cyan-400 outline-none" required />
               </div>
               <div>
-                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 ml-2">Ganti Foto Kades (Opsional)</label>
-                <input name="fotoKades" type="file" accept="image/*" className="w-full text-sm text-gray-500 file:mr-4 file:py-3 file:px-6 file:rounded-2xl file:border-0 file:bg-green-600 file:text-white file:font-black hover:file:bg-green-700 transition" />
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Ganti Foto Kades (Opsional)</label>
+                <input name="foto_kades" type="file" accept="image/*" className="w-full text-sm text-slate-500 file:mr-4 file:py-3 file:px-6 file:rounded-2xl file:border-0 file:bg-slate-900 file:text-cyan-300 file:font-black hover:file:bg-black transition cursor-pointer" />
               </div>
             </div>
             <div>
-              <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 ml-2">Pesan Sambutan</label>
-              <textarea name="isiSambutan" defaultValue={initialData?.isiSambutan} rows={8} className="w-full border-2 border-gray-100 p-4 rounded-2xl text-black font-bold bg-gray-50" required />
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Pesan Sambutan</label>
+              <textarea name="isi_sambutan" defaultValue={initialData?.isi_sambutan} rows={10} className="w-full border-2 border-slate-100 p-6 rounded-[30px] text-slate-900 font-bold bg-slate-50/50 focus:border-cyan-400 focus:bg-white transition-all outline-none" required />
             </div>
           </div>
         </div>
 
         {/* TOMBOL SIMPAN MELAYANG */}
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-full max-w-xl px-4 z-50">
+        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 w-full max-w-xl px-6 z-50">
           <button 
             type="submit" 
             disabled={loading} 
-            className="w-full bg-green-600 hover:bg-green-700 text-white font-black py-5 rounded-3xl shadow-2xl disabled:opacity-50 text-xl transition-all active:scale-95 flex items-center justify-center gap-4 border-4 border-white uppercase tracking-widest"
+            className="w-full bg-cyan-300 hover:bg-slate-900 hover:text-cyan-300 text-slate-900 font-[1000] py-6 rounded-[30px] shadow-2xl disabled:opacity-50 text-xl transition-all active:scale-95 flex items-center justify-center gap-4 border-4 border-white uppercase tracking-[0.2em]"
           >
-            {loading ? "⌛ SEDANG MENYINKRONKAN..." : "💾 SIMPAN SEMUA PERUBAHAN"}
+            {loading ? "⌛ SEDANG MENYINKRONKAN..." : "💾 SIMPAN PERUBAHAN"}
           </button>
         </div>
       </form>

@@ -2,42 +2,41 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300 border-t-4 border-[#c1eb91]">
+    // Menggunakan Slate-900 agar lebih gelap dari navbar dan border atas Cyan-300 yang menyala
+    <footer className="bg-slate-950 text-slate-300 border-t-4 border-cyan-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           
           {/* KOLOM 1: TENTANG DESA */}
           <div>
             <h3 className="text-white text-lg font-bold mb-4 uppercase tracking-wider">
-              Desa Parit
+              Desa Terusan Muara
             </h3>
-            <p className="text-sm leading-relaxed mb-4">
-              Website resmi Desa Parit, Kecamatan Indralaya Utara, Kabupaten Ogan Ilir. 
+            <p className="text-sm leading-relaxed mb-4 text-slate-400">
+              Website resmi Desa Terusan Muara, Kecamatan Sumber Marga Telang, Kabupaten Banyuasin. 
               Media komunikasi dan transparansi informasi bagi seluruh masyarakat.
             </p>
             <div className="flex space-x-4">
-              {/* === LINK SOSIAL MEDIA AKTIF === */}
+              {/* === LINK SOSIAL MEDIA === */}
               <a 
                 href="https://www.facebook.com/share/18F9MewqwH/" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="text-gray-400 hover:text-blue-500 transition flex items-center gap-1"
+                className="text-slate-500 hover:text-cyan-300 transition-all flex items-center gap-1"
               >
                 📘 FB
               </a>
               <a 
-                href="https://www.instagram.com/desaparit_indralaya_utara?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" 
+                href="https://www.instagram.com/zakiramadhan_17" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="text-gray-400 hover:text-pink-500 transition flex items-center gap-1"
+                className="text-slate-500 hover:text-cyan-300 transition-all flex items-center gap-1"
               >
                 📷 IG
               </a>
               <a 
-                href="https://youtube.com/LINK_AKUN_YT_DISINI" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="text-gray-400 hover:text-red-500 transition flex items-center gap-1"
+                href="#" 
+                className="text-slate-500 hover:text-cyan-300 transition-all flex items-center gap-1"
               >
                 ▶️ YT
               </a>
@@ -51,16 +50,24 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/" className="hover:text-[#c1eb91] transition">&rarr; Beranda</Link>
+                <Link href="/" className="hover:text-cyan-300 transition-colors flex items-center gap-2">
+                  <span className="text-cyan-500">→</span> Beranda
+                </Link>
               </li>
               <li>
-                <Link href="/profil" className="hover:text-[#c1eb91] transition">&rarr; Profil Desa</Link>
+                <Link href="/profil" className="hover:text-cyan-300 transition-colors flex items-center gap-2">
+                  <span className="text-cyan-500">→</span> Profil Desa
+                </Link>
               </li>
               <li>
-                <Link href="/potensi" className="hover:text-[#c1eb91] transition">&rarr; Potensi & UMKM</Link>
+                <Link href="/potensi" className="hover:text-cyan-300 transition-colors flex items-center gap-2">
+                  <span className="text-cyan-500">→</span> Potensi & UMKM
+                </Link>
               </li>
               <li>
-                <Link href="/kontak" className="hover:text-[#c1eb91] transition">&rarr; Kontak Kami</Link>
+                <Link href="/kontak" className="hover:text-cyan-300 transition-colors flex items-center gap-2">
+                  <span className="text-cyan-500">→</span> Kontak Kami
+                </Link>
               </li>
             </ul>
           </div>
@@ -70,17 +77,17 @@ export default function Footer() {
             <h3 className="text-white text-lg font-bold mb-4 uppercase tracking-wider">
               Hubungi Kami
             </h3>
-            <ul className="space-y-3 text-sm">
+            <ul className="space-y-3 text-sm text-slate-400">
               <li className="flex items-start gap-3">
-                <span className="text-base">🏢</span>
-                <span>Jl. Poros Desa Parit, Kec. Indralaya Utara, Kab. Ogan Ilir, Sumsel.</span>
+                <span className="text-cyan-300">🏢</span>
+                <span>Jl. Poros Desa Terusan Muara, Kec. Sumber Marga Telang, Kab. Banyuasin, Sumsel.</span>
               </li>
               <li className="flex items-center gap-3">
-                <span className="text-base">📧</span>
-                <span>desaparit2019@gmail.com</span>
+                <span className="text-cyan-300">📧</span>
+                <span>desaTerusanMuara2019@gmail.com</span>
               </li>
               <li className="flex items-center gap-3">
-                <span className="text-base">📱</span>
+                <span className="text-cyan-300">📱</span>
                 <span>+62 812-7831-8862</span>
               </li>
             </ul>
@@ -89,11 +96,11 @@ export default function Footer() {
         </div>
 
         {/* GARIS BAWAH & COPYRIGHT */}
-        <div className="border-t border-gray-800 mt-12 pt-8 text-center text-xs text-gray-500">
+        <div className="border-t border-slate-800 mt-12 pt-8 text-center text-xs text-slate-500">
           <p>
-            &copy; {new Date().getFullYear()} Pemerintah Desa Parit. Hak Cipta Dilindungi. 
+            &copy; {new Date().getFullYear()} Pemerintah Desa Terusan Muara. Hak Cipta Dilindungi. 
             <br/>
-            Dikembangkan oleh <span className="text-[#c1eb91] font-bold uppercase tracking-tight">
+            Dikembangkan oleh <span className="text-cyan-300 font-bold uppercase tracking-tight">
               Mahasiswa KKN REKOGNISI KELOMPOK 2 UIN RADEN FATAH PALEMBANG 2026
             </span>.
           </p>

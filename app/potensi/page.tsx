@@ -1,4 +1,4 @@
-import { getPotensi } from "@/lib/contentful"; 
+import { supabase } from "@/lib/supabase"; 
 import Image from "next/image";
 import Link from "next/link";
 
@@ -6,78 +6,82 @@ import Link from "next/link";
 export const revalidate = 0; 
 
 export default async function Potensi() {
-  // 1. Ambil data dari Contentful secara server-side
-  const potensiList = await getPotensi(); 
+  // 1. Ambil data dari Supabase (Tabel potensi_desa)
+  const { data: potensiList, error } = await supabase
+    .from("potensi_desa")
+    .select("*")
+    .order("id", { ascending: false });
 
   return (
-    <main className="min-h-screen bg-gray-50 pb-20">
+    <main className="min-h-screen bg-slate-50 pb-20">
       
-      {/* --- HEADER HERO --- */}
-      <div className="bg-green-900 pt-32 pb-20 text-center text-white relative overflow-hidden">
+      {/* --- HEADER HERO: TETAP SAMA --- */}
+      <div className="bg-slate-900 pt-32 pb-24 text-center text-white relative overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')]"></div>
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px]"></div>
         
         <div className="relative z-10 px-4">
-          <h1 className="text-4xl md:text-5xl font-black mb-4 uppercase tracking-tighter">
-            Potensi Desa Parit
+          <h1 className="text-4xl md:text-6xl font-[1000] mb-6 uppercase tracking-tighter leading-none">
+            Potensi <span className="text-cyan-400">Desa Terusan Muara</span>
           </h1>
-          <p className="text-green-200 text-lg max-w-2xl mx-auto font-medium">
-            Kekayaan alam Desa Parit yang melimpah, mulai dari hamparan Sawit, Karet, hingga kreativitas UMKM warganya.
+          <p className="text-slate-300 text-lg md:text-xl max-w-3xl mx-auto font-medium leading-relaxed">
+            Menelusuri kekayaan alam melimpah, mulai dari sektor perkebunan Sawit dan Karet, hingga kreativitas inovatif UMKM warga Desa Terusan Muara.
           </p>
         </div>
       </div>
 
       {/* --- KONTEN GRID --- */}
-      <div className="max-w-7xl mx-auto px-4 -mt-10 relative z-20">
+      <div className="max-w-7xl mx-auto px-4 -mt-12 relative z-20">
         
-        {potensiList.length === 0 ? (
-          <div className="bg-white p-12 rounded-[40px] shadow-xl text-center border border-green-100">
-            <p className="text-gray-500 text-lg mb-4 font-bold">📭 Belum ada data potensi yang tersedia.</p>
-            <Link href="/dashboard/potensi" className="inline-block text-white font-bold bg-green-700 px-6 py-3 rounded-2xl hover:bg-green-800 transition">
+        {!potensiList || potensiList.length === 0 ? (
+          <div className="bg-white p-16 rounded-[40px] shadow-2xl text-center border border-slate-100">
+            <p className="text-slate-400 text-xl mb-6 font-bold italic tracking-wide">📭 Belum ada data potensi yang tersedia saat ini.</p>
+            <Link href="/dashboard/potensi" className="inline-block text-slate-900 font-black bg-cyan-300 px-8 py-4 rounded-2xl hover:bg-cyan-400 transition-all shadow-lg uppercase text-xs tracking-widest">
               Input Data Sekarang &rarr;
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {potensiList.map((item: any) => {
-              // SINKRONISASI FIELD: Menghubungkan ke ID Contentful kamu
-              const nama = item.fields.namaPotensi || "Potensi Desa";
-              const kategori = item.fields.kategori || "Umum";
-              const deskripsiTeks = item.fields.deskripsi || "Klik untuk melihat detail potensi...";
-              const urlGambar = item.fields.fotoPotensi?.fields?.file?.url;
+              // Map variabel dari kolom Supabase
+              const nama = item.nama_potensi || "Potensi Desa";
+              const kategori = item.kategori || "Umum";
+              const deskripsiTeks = item.deskripsi || "Klik untuk melihat detail potensi...";
+              const urlGambar = item.foto_url;
 
               return (
                 <div 
-                  key={item.sys.id} 
-                  className="bg-white rounded-[40px] shadow-xl overflow-hidden group hover:-translate-y-2 transition duration-500 border border-gray-100 flex flex-col h-full"
+                  key={item.id} 
+                  className="bg-white rounded-[40px] shadow-2xl shadow-slate-900/5 overflow-hidden group hover:-translate-y-3 transition-all duration-500 border border-slate-50 flex flex-col h-full"
                 >
                   
                   {/* BAGIAN GAMBAR */}
-                  <div className="h-64 overflow-hidden relative bg-gray-200">
-                    <div className="absolute top-5 left-5 z-10 bg-white/90 backdrop-blur text-green-800 text-[10px] font-black px-4 py-1.5 rounded-full shadow-sm uppercase tracking-widest border border-green-100">
-                      🌱 {kategori}
+                  <div className="h-72 overflow-hidden relative bg-slate-100">
+                    <div className="absolute top-5 left-5 z-10 bg-slate-900/80 backdrop-blur text-cyan-300 text-[10px] font-black px-5 py-2 rounded-full shadow-lg uppercase tracking-[0.2em] border border-cyan-500/30">
+                      💎 {kategori}
                     </div>
                     
                     <Image 
-                      src={urlGambar ? `https:${urlGambar}` : "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1000&auto=format&fit=crop"} 
+                      src={urlGambar || "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1000&auto=format&fit=crop"} 
                       alt={nama} 
                       fill 
-                      className="object-cover group-hover:scale-110 transition duration-700"
+                      className="object-cover group-hover:scale-110 transition duration-1000"
                     />
 
-                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition duration-500 flex items-center justify-center">
-                       <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-2xl">
-                          <span className="text-green-800 font-bold text-xl">→</span>
+                    <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition duration-500 flex items-center justify-center backdrop-blur-[2px]">
+                       <div className="w-14 h-14 bg-cyan-300 rounded-full flex items-center justify-center shadow-2xl transform scale-50 group-hover:scale-100 transition-transform duration-500">
+                          <span className="text-slate-900 font-black text-2xl">→</span>
                        </div>
                     </div>
                   </div>
 
                   {/* BAGIAN TEKS */}
-                  <div className="p-8 flex-grow flex flex-col">
-                    <h3 className="text-2xl font-black text-gray-800 mb-3 group-hover:text-green-700 transition leading-tight">
+                  <div className="p-10 flex-grow flex flex-col">
+                    <h3 className="text-2xl font-black text-slate-800 mb-4 group-hover:text-cyan-600 transition duration-300 leading-tight">
                       {nama}
                     </h3>
-                    <p className="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-3 italic">
-                      {deskripsiTeks}
+                    <p className="text-slate-500 text-sm leading-relaxed mb-6 line-clamp-3 italic font-medium">
+                      "{deskripsiTeks}"
                     </p>
                   </div>
 
@@ -88,21 +92,21 @@ export default async function Potensi() {
         )}
       </div>
       
-      {/* --- BANNER PROMOSI BUMDES --- */}
-      <div className="max-w-5xl mx-auto mt-24 px-4">
-        <div className="bg-[#c1eb91] rounded-[50px] p-10 md:p-16 text-center relative overflow-hidden shadow-2xl shadow-green-900/10 border-4 border-white">
-           <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/20 rounded-full blur-3xl"></div>
-           <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/20 rounded-full blur-3xl"></div>
+      {/* --- BANNER PROMOSI BUMDES: TETAP SAMA --- */}
+      <div className="max-w-6xl mx-auto mt-28 px-4">
+        <div className="bg-cyan-300 rounded-[60px] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl border-[10px] border-white">
+           <div className="absolute -top-10 -left-10 w-60 h-60 bg-white/30 rounded-full blur-3xl"></div>
+           <div className="absolute -bottom-10 -right-10 w-60 h-60 bg-white/30 rounded-full blur-3xl"></div>
            
-           <h2 className="text-3xl md:text-4xl font-black text-green-900 mb-6 relative z-10 leading-tight">
-             Tertarik Dengan Hasil Bumi<br/>Desa Parit?
+           <h2 className="text-4xl md:text-5xl font-[1000] text-slate-900 mb-8 relative z-10 leading-[1.1] tracking-tighter">
+             Tertarik Dengan Hasil Bumi<br/>Desa Terusan Muara?
            </h2>
-           <p className="text-green-800 mb-10 max-w-2xl mx-auto relative z-10 font-bold opacity-80 leading-relaxed text-lg">
-             Kami siap menyuplai kelapa sawit, karet, atau produk UMKM dalam jumlah besar. Hubungi BUMDes kami sekarang.
+           <p className="text-slate-800 mb-12 max-w-3xl mx-auto relative z-10 font-bold opacity-90 leading-relaxed text-lg md:text-xl italic">
+             "Kami melayani suplai Kelapa Sawit, Karet, dan Produk UMKM berkualitas dalam skala besar. Mari bangun kemitraan bersama BUMDes kami."
            </p>
            <Link 
              href="/kontak" 
-             className="inline-block bg-green-900 text-white px-10 py-4 rounded-2xl font-black hover:bg-green-950 transition shadow-xl hover:shadow-green-900/30 relative z-10 uppercase text-sm tracking-widest active:scale-95"
+             className="inline-block bg-slate-900 text-cyan-300 px-12 py-5 rounded-2xl font-black hover:bg-slate-800 transition-all shadow-2xl hover:shadow-slate-900/40 relative z-10 uppercase text-xs tracking-[0.3em] active:scale-95"
            >
              Hubungi BUMDes &rarr;
            </Link>

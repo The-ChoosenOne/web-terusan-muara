@@ -2,28 +2,32 @@ import Marquee from "react-fast-marquee";
 
 export default function RunningText() {
   return (
-    // KITA PAKAI WARNA KHAS DESA PARIT (#c1eb91) DI SINI
-    <div className="bg-[#c1eb91] text-green-900 border-b border-green-300 relative z-40">
+    // Menggunakan Cyan-50 agar tetap cerah tapi tidak menusuk mata
+    <div className="bg-cyan-300 text-slate-800 border-b border-cyan-100 relative z-40">
       <div className="flex">
         
-        {/* Label INFO jadi Hijau Tua biar kontras */}
-        <div className="bg-green-800 text-white px-4 py-2 font-bold text-sm uppercase tracking-wider z-10 flex items-center shadow-md">
-          📢 Info Terkini
+        {/* Label INFO menggunakan Slate-900 agar senada dengan Navbar */}
+        <div className="bg-slate-900 text-white px-4 py-2 font-bold text-sm uppercase tracking-wider z-10 flex items-center shadow-lg">
+          <span className="animate-pulse mr-2">📢</span> Info Terkini
         </div>
 
-        {/* Teks Berjalan */}
-        <Marquee gradient={false} speed={40} className="py-2 font-semibold text-sm">
-          <span className="mx-8">
-            • Selamat Datang di Website Resmi Desa Parit, Ogan Ilir.
+        {/* Teks Berjalan dengan warna Slate dan aksen Cyan */}
+        <Marquee gradient={false} speed={50} className="py-2 font-bold text-sm">
+          <span className="mx-8 flex items-center gap-2">
+            <span className="text-cyan-600">●</span> 
+            Selamat Datang di Website Resmi Desa Terusan Muara, Banyuasin.
           </span>
-          <span className="mx-8">
-            • Hijaukan Desa, Majukan Bangsa! Mari jaga kebersihan lingkungan bersama.
+          <span className="mx-8 flex items-center gap-2">
+            <span className="text-cyan-600">●</span> 
+            Transformasi Digital Desa: Mewujudkan Tata Kelola yang Transparan dan Mandiri.
           </span>
-          <span className="mx-8">
-            • Jadwal Posyandu Balita dan Ibu Hamil diadakan setiap tanggal 10 di Gedung Raga.
+          <span className="mx-8 flex items-center gap-2">
+            <span className="text-cyan-600">●</span> 
+            Jadwal Posyandu Balita dan Ibu Hamil diadakan setiap tanggal 10.
           </span>
-          <span className="mx-8">
-            • Pelayanan Kantor Desa buka Senin - Jumat pukul 08.00 - 16.00 WIB.
+          <span className="mx-8 flex items-center gap-2">
+            <span className="text-cyan-600">●</span> 
+            Pelayanan Kantor Desa buka Senin - Jumat pukul 08.00 - 16.00 WIB.
           </span>
         </Marquee>
       </div>

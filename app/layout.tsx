@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 import AOSClient from "@/components/AOSClient"; 
 import RunningText from "@/components/RunningText"; 
 import { Poppins } from "next/font/google";
-import { usePathname } from "next/navigation"; // <--- WAJIB ADA
+import { usePathname } from "next/navigation";
 
 const poppins = Poppins({ 
   subsets: ["latin"],
@@ -27,10 +27,17 @@ export default function RootLayout({
 
   return (
     <html lang="id">
+      <head>
+        {/* --- BAGIAN GANTI JUDUL & LOGO --- */}
+        <title>Desa Terusan Muara | Website Resmi</title>
+        <meta name="description" content="Portal Informasi Resmi Pemerintah Desa Terusan Muara, Kecamatan Sumber Marga Telang, Banyuasin." />
+        <link rel="icon" href="/banyuasin.png" /> 
+        {/* Pastiin lo taruh file icon.png di folder /public ya Jak! */}
+      </head>
       <body className={poppins.className}>
         <AOSClient />
 
-        {/* Header Desa hanya muncul di beranda/halaman publik, bukan di login/dashboard */}
+        {/* Header Desa hanya muncul di beranda/halaman publik */}
         {!isAuthPage && (
           <div className="fixed w-full z-50 top-0 flex flex-col shadow-lg">
              <HeaderAtas />
@@ -39,7 +46,7 @@ export default function RootLayout({
           </div>
         )}
 
-        {/* Jika di halaman login, konten langsung muncul tanpa jarak atas (padding) */}
+        {/* Layout Main */}
         <main className={!isAuthPage ? "pt-[160px] md:pt-[190px] min-h-screen" : "min-h-screen"}>
            {children}
         </main>

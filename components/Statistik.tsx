@@ -1,43 +1,52 @@
-// Statistik.tsx
+// components/Statistik.tsx
 
 interface StatistikProps {
   data: {
-    jumlahPenduduk?: number;
-    kepalaKeluarga?: number;
-    luasWilayah?: string;
+    jumlah_penduduk?: number;
+    kepala_keluarga?: number;
+    luas_wilayah?: number; // Di tabel lo tadi int8 atau float
   };
 }
 
 export default function Statistik({ data }: StatistikProps) {
   return (
-    <div className="bg-white py-12 -mt-10 relative z-20 mx-4 md:mx-auto max-w-6xl rounded-xl shadow-2xl border-t-4 border-yellow-500">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-gray-200">
+    <div className="bg-white py-12 -mt-16 relative z-20 mx-4 md:mx-auto max-w-6xl rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border-t-8 border-cyan-400">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-slate-100">
         
         {/* Kotak 1: Penduduk */}
-        <div className="p-4">
-          <div className="text-4xl mb-2">👨‍👩‍👧‍👦</div>
-          <h3 className="text-4xl font-bold text-blue-900 mb-1">
-            {data?.jumlahPenduduk?.toLocaleString("id-ID") || "0"}
+        <div className="p-4 group">
+          <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">👨‍👩‍👧‍👦</div>
+          <h3 className="text-5xl font-black text-slate-800 mb-2 tracking-tighter">
+            {/* Panggil jumlah_penduduk sesuai kolom Supabase */}
+            {data?.jumlah_penduduk?.toLocaleString("id-ID") || "0"}
           </h3>
-          <p className="text-gray-500 font-medium uppercase tracking-wider">Jumlah Penduduk</p>
+          <p className="text-cyan-600 font-black text-xs uppercase tracking-[0.2em]">
+            Jumlah Penduduk
+          </p>
         </div>
 
         {/* Kotak 2: Kepala Keluarga */}
-        <div className="p-4">
-          <div className="text-4xl mb-2">🏠</div>
-          <h3 className="text-4xl font-bold text-blue-900 mb-1">
-            {data?.kepalaKeluarga || "0"}
+        <div className="p-4 group">
+          <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">🏠</div>
+          <h3 className="text-5xl font-black text-slate-800 mb-2 tracking-tighter">
+            {/* Panggil kepala_keluarga sesuai kolom Supabase */}
+            {data?.kepala_keluarga?.toLocaleString("id-ID") || "0"}
           </h3>
-          <p className="text-gray-500 font-medium uppercase tracking-wider">Kepala Keluarga</p>
+          <p className="text-cyan-600 font-black text-xs uppercase tracking-[0.2em]">
+            Kepala Keluarga
+          </p>
         </div>
 
         {/* Kotak 3: Luas Wilayah */}
-        <div className="p-4">
-          <div className="text-4xl mb-2">🗺️</div>
-          <h3 className="text-4xl font-bold text-blue-900 mb-1">
-            {data?.luasWilayah || "0"}
+        <div className="p-4 group">
+          <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">🗺️</div>
+          <h3 className="text-5xl font-black text-slate-800 mb-2 tracking-tighter">
+            {/* Panggil luas_wilayah sesuai kolom Supabase */}
+            {data?.luas_wilayah || "0"} <span className="text-xl">km²</span>
           </h3>
-          <p className="text-gray-500 font-medium uppercase tracking-wider">Luas Wilayah</p>
+          <p className="text-cyan-600 font-black text-xs uppercase tracking-[0.2em]">
+            Luas Wilayah
+          </p>
         </div>
 
       </div>

@@ -1,21 +1,19 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-      },
-      {
-        protocol: "https",
-        hostname: "images.ctfassets.net",
+        protocol: 'https',
+        hostname: 'uppbxjjuptxwupcbtlxo.supabase.co',
+        port: '',
+        pathname: '/storage/v1/object/public/**',
       },
     ],
   },
+  // TAMBAHIN BAGIAN INI JAK:
   experimental: {
     serverActions: {
-      bodySizeLimit: '10mb', // Ini untuk memperbaiki error 1MB tadi
+      bodySizeLimit: '10mb', // Naikin limit jadi 10MB
     },
   },
 };
