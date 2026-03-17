@@ -110,12 +110,6 @@ export default function LoginPage() {
             )}
           </button>
         </form>
-
-        <div className="text-center mt-14 pt-10 border-t border-slate-50">
-           <p className="text-[8px] text-slate-300 font-black uppercase tracking-[0.6em]">
-             KKN UIN RADEN FATAH PALEMBANG 2026
-           </p>
-        </div>
       </div>
     </div>
   );

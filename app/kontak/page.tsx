@@ -20,7 +20,7 @@ export default function Kontak() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 -mt-20 relative z-20">
+      <div className="max-w-7xl mx-auto px-6 -mt-20 relative z-20 pt-7">
         
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
           

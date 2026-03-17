@@ -3,39 +3,30 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { supabase } from "@/lib/supabase"; // Import Supabase
+import { supabase } from "@/lib/supabase"; 
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [isSidebarOpen, setSidebarOpen] = useState(true);
 
-  // --- 1. PROTEKSI HALAMAN (Supabase Auth Version) ---
+  // --- 1. PROTEKSI HALAMAN ---
   useEffect(() => {
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      
-      // Kalau nggak ada session aktif, langsung tendang ke login
       if (!session) {
-        // Hapus sisa-sisa cookie biar gak terjadi infinite loop
         document.cookie = "isLoggedIn=; Max-Age=0; path=/"; 
         router.push("/login");
       }
     };
-    
     checkSession();
   }, [router]);
 
-  // --- 2. HANDLE LOGOUT (Real Auth Logout) ---
+  // --- 2. HANDLE LOGOUT ---
   const handleLogout = async () => {
     if (confirm("Apakah Anda yakin ingin keluar dari panel admin?")) {
-      // 1. Logout dari Supabase (Ini yang paling penting!)
       await supabase.auth.signOut();
-      
-      // 2. Bersihkan Cookie & LocalStorage cara lama lo
       localStorage.removeItem("isLoggedIn");
       document.cookie = "isLoggedIn=; Max-Age=0; path=/"; 
-      
-      // 3. Balik ke login
       router.push("/");
     }
   };
@@ -43,7 +34,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <div className="flex h-screen bg-slate-50 font-sans text-slate-900">
       
-      {/* SIDEBAR - TAMPILAN TETAP SAMA */}
+      {/* SIDEBAR */}
       <aside className={`bg-slate-900 text-white w-72 flex-shrink-0 transition-all duration-500 ${isSidebarOpen ? "translate-x-0" : "-translate-x-72"} fixed md:relative z-30 h-full overflow-y-auto border-r border-white/5 shadow-2xl`}>
         <div className="p-8 border-b border-white/5 flex items-center gap-4 bg-slate-950/50">
            <div className="w-12 h-12 bg-cyan-400 rounded-2xl flex items-center justify-center text-slate-900 font-[1000] shadow-lg shadow-cyan-400/20 transform -rotate-6">
@@ -67,6 +58,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             { href: "/dashboard/berita", icon: "📰", label: "Berita Desa" },
             { href: "/dashboard/perangkat", icon: "👔", label: "Perangkat Desa" },
             { href: "/dashboard/potensi", icon: "💎", label: "Potensi Desa" },
+            // --- MENU BARU LO DISINI JAK ---
+            { href: "/dashboard/layanan", icon: "📄", label: "Layanan Surat" }, 
             { href: "/dashboard/slider", icon: "🖼️", label: "Manajemen Slider" },
             { href: "/dashboard/profil", icon: "🏛️", label: "Profil & Sejarah" },
           ].map((item) => (
@@ -98,8 +91,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
             <div className="relative">
               <div className="w-12 h-12 bg-slate-900 rounded-2xl border-2 border-white shadow-xl flex items-center justify-center text-cyan-400 font-bold uppercase">
-                {/* Ambil huruf pertama nama lo Jak */}
-                Z
+                A
               </div>
               <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-cyan-400 border-2 border-white rounded-full"></div>
             </div>

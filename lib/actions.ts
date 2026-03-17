@@ -93,6 +93,39 @@ export async function tambahBeritaAction(formData: FormData) {
   } catch (error: any) { return { success: false, message: error.message }; }
 }
 
+// lib/actions.ts
+
+export async function updateBeritaAction(id: string, formData: FormData) {
+  try {
+    const fotoBaru = formData.get("gambar_utama") as File;
+    let updateData: any = {
+      judul: formData.get("judul"),
+      deskripsi: formData.get("deskripsi"),
+      konten: formData.get("konten_lengkap"),
+      tanggal: formData.get("tanggal"),
+    };
+
+    // Kalau ada foto baru di-upload, kita ganti fotonya
+    if (fotoBaru && fotoBaru.size > 0) {
+      const url = await uploadFoto(fotoBaru, "berita");
+      if (url) updateData.foto_url = url;
+    }
+
+    const { error } = await supabaseAdmin
+      .from("berita")
+      .update(updateData)
+      .eq("id", id);
+
+    if (error) throw error;
+
+    revalidatePath("/dashboard/berita");
+    revalidatePath("/berita");
+    return { success: true, message: "Berita berhasil diupdate! 🪄" };
+  } catch (error: any) {
+    return { success: false, message: error.message };
+  }
+}
+
 export async function deleteBerita(id: string) {
   try {
     const { error } = await supabaseAdmin.from("berita").delete().eq("id", id);
@@ -211,4 +244,51 @@ export async function deleteSlider(id: number) {
 
   revalidatePath("/dashboard/slider");
   revalidatePath("/");
+}
+
+// --- 6. FITUR LAYANAN SURAT (Dinamis) ---
+export async function upsertLayananAction(formData: FormData, id?: string) {
+  try {
+    const data = {
+      judul: formData.get("judul"),
+      persyaratan: formData.get("persyaratan"), // Disimpan sebagai text (nanti di-split di UI)
+      catatan: formData.get("catatan"),
+    };
+
+    let error;
+    if (id) {
+      // Jika ada ID, berarti mode EDIT (UPDATE)
+      const res = await supabaseAdmin.from("layanan_surat").update(data).eq("id", id);
+      error = res.error;
+    } else {
+      // Jika tidak ada ID, berarti mode TAMBAH (INSERT)
+      const res = await supabaseAdmin.from("layanan_surat").insert([data]);
+      error = res.error;
+    }
+
+    if (error) throw error;
+
+    // Refresh data di halaman publik dan dashboard
+    revalidatePath("/layanan");
+    revalidatePath("/dashboard/layanan");
+    
+    return { success: true };
+  } catch (error: any) {
+    console.error("Error Layanan:", error.message);
+    return { success: false, message: error.message };
+  }
+}
+
+export async function deleteLayananAction(id: string) {
+  try {
+    const { error } = await supabaseAdmin.from("layanan_surat").delete().eq("id", id);
+    if (error) throw error;
+
+    revalidatePath("/layanan");
+    revalidatePath("/dashboard/layanan");
+    
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, message: error.message };
+  }
 }

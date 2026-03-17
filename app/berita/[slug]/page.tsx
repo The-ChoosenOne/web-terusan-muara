@@ -1,22 +1,28 @@
-import { supabase } from "@/lib/supabase"; // Ganti import-nya ke Supabase
+// app/berita/[slug]/page.tsx
+import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
-export default async function DetailBerita({ params }: { params: { slug: string } }) {
-  // 1. Ambil data berita berdasarkan slug dari Supabase
-  const { data: berita } = await supabase
+// --- 1. UBAH DEFINISI PARAMS JADI PROMISE ---
+export default async function DetailBerita({ params }: { params: Promise<{ slug: string }> }) {
+  
+  // --- 2. WAJIB DI-AWAIT BIAR SLUG-NYA KELUAR ---
+  const { slug } = await params;
+
+  // 3. Ambil data berita berdasarkan slug yang udah di-await
+  const { data: berita, error } = await supabase
     .from("berita")
     .select("*")
-    .eq("slug", params.slug)
+    .eq("slug", slug) // Pake variabel slug hasil await
     .single();
 
-  // 2. Jika berita tidak ditemukan, tampilkan halaman 404
-  if (!berita) {
+  // 4. Jika berita tidak ditemukan atau ada error, tampilkan 404
+  if (error || !berita) {
+    console.error("Detail Berita Error:", error?.message);
     notFound();
   }
 
-  // 3. Destructuring data Supabase (Gak perlu .fields lagi Jak!)
   const { judul, tanggal, konten, foto_url } = berita;
 
   return (
@@ -45,7 +51,7 @@ export default async function DetailBerita({ params }: { params: { slug: string 
         {foto_url && (
           <div className="relative w-full h-[350px] md:h-[600px] mb-16 rounded-[50px] overflow-hidden shadow-2xl shadow-slate-900/10 border border-slate-50">
             <Image 
-              src={foto_url} // Langsung pake foto_url dari Supabase
+              src={foto_url} 
               alt={judul}
               fill
               className="object-cover hover:scale-105 transition-transform duration-1000"
@@ -56,10 +62,8 @@ export default async function DetailBerita({ params }: { params: { slug: string 
 
         {/* CONTENT SECTION */}
         <div className="prose prose-lg md:prose-2xl prose-slate max-w-none text-slate-700 leading-relaxed font-medium selection:bg-cyan-100">
-          {/* Karena kita input berita dari dashboard pake TextArea atau Editor, 
-              kita render pake dangerouslySetInnerHTML biar tag <p> atau <br> kebaca */}
           <div 
-            className="drop-shadow-sm whitespace-pre-line" // whitespace-pre-line buat jaga enter/spasi
+            className="drop-shadow-sm whitespace-pre-line" 
             dangerouslySetInnerHTML={{ __html: konten }} 
           />
         </div>

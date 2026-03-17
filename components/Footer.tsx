@@ -98,11 +98,8 @@ export default function Footer() {
         {/* GARIS BAWAH & COPYRIGHT */}
         <div className="border-t border-slate-800 mt-12 pt-8 text-center text-xs text-slate-500">
           <p>
-            &copy; {new Date().getFullYear()} Pemerintah Desa Terusan Muara. Hak Cipta Dilindungi. 
+            &copy; {new Date().getFullYear()} <span className="text-cyan-300 font-bold uppercase tracking-tight">Pemerintah Desa Terusan Muara.</span> Hak Cipta Dilindungi. 
             <br/>
-            Dikembangkan oleh <span className="text-cyan-300 font-bold uppercase tracking-tight">
-              Mahasiswa KKN REKOGNISI KELOMPOK 2 UIN RADEN FATAH PALEMBANG 2026
-            </span>.
           </p>
         </div>
       </div>

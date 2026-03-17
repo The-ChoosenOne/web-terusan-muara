@@ -49,7 +49,7 @@ export default function HalamanSlider() {
 
   // --- 3. HANDLE DELETE ---
   const handleDelete = async (id: number) => {
-    if (confirm("Yakin mau hapus foto dokumentasi ini, Jak?")) {
+    if (confirm("Yakin mau hapus foto dokumentasi ini?")) {
       try {
         await deleteSlider(id);
         alert("🗑️ Foto berhasil dihapus!");

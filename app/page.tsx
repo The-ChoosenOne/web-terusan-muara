@@ -96,7 +96,7 @@ export default async function Home() {
       {/* 6. BERITA TERKINI */}
       <section className="max-w-6xl mx-auto p-6 md:p-10 mt-10 pb-20">
         <div className="flex justify-between items-center mb-10">
-          <h2 className="text-3xl font-black text-slate-900 border-l-8 border-cyan-400 pl-4 uppercase tracking-tighter">Berita Terkini</h2>
+          <h2 className="text-3xl font-black text-slate-900 border-l-8 border-cyan-400 pl-4 uppercase tracking-tighter italic">Berita Terkini</h2>
           <Link href="/berita" className="text-cyan-600 hover:underline font-black text-sm uppercase tracking-widest">Lihat Semua Berita &rarr;</Link>
         </div>
 
@@ -112,8 +112,16 @@ export default async function Home() {
                 <div className="absolute top-4 left-4 bg-slate-900 text-cyan-300 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Info Desa</div>
               </div>
               <div className="p-8 flex-1 flex flex-col text-black">
-                <h3 className="text-xl font-black mb-3 line-clamp-2 group-hover:text-cyan-700 transition leading-tight">{item.judul}</h3>
-                <p className="text-slate-400 text-xs mb-6 font-bold uppercase tracking-widest">
+                {/* Judul Berita */}
+                <h3 className="text-xl font-[1000] mb-3 line-clamp-2 group-hover:text-cyan-700 transition leading-tight uppercase italic">{item.judul}</h3>
+                
+                {/* --- BAGIAN DESKRIPSI RINGKAS --- */}
+                <p className="text-slate-500 text-xs font-medium mb-6 line-clamp-2 italic">
+                  {item.deskripsi || "Klik untuk membaca detail berita selengkapnya..."}
+                </p>
+                {/* ------------------------------- */}
+
+                <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-6">
                   📅 {item.tanggal ? new Date(item.tanggal).toLocaleDateString("id-ID", { day: 'numeric', month: 'long', year: 'numeric' }) : "Baru saja"}
                 </p>
                 <Link href={`/berita/${item.slug}`} className="mt-auto block text-center py-4 bg-slate-50 text-cyan-700 font-black rounded-2xl hover:bg-slate-900 hover:text-cyan-300 transition uppercase text-xs tracking-widest shadow-inner">Baca Selengkapnya</Link>
