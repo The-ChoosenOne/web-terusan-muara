@@ -13,13 +13,13 @@ export default async function LayananSurat() {
     .order("id", { ascending: true });
 
   return (
-    <main className="min-h-screen bg-slate-50 pb-24 pt-40">
+    <main className="min-h-screen bg-slate-50 pb-24 pt-30">
       <div className="max-w-7xl mx-auto px-6">
         
         {/* Header Section - Tetap sama */}
         <div className="text-center md:text-left mb-16">
           <span className="text-cyan-600 font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Pelayanan Publik</span>
-          <h1 className="text-5xl md:text-8xl font-[1000] text-slate-900 uppercase tracking-tighter italic leading-[0.8]">
+          <h1 className="text-5xl md:text-7xl font-[1000] text-slate-900 uppercase tracking-tighter italic leading-[0.8]">
             Layanan <span className="text-cyan-600">Surat</span>
           </h1>
           <p className="text-slate-500 font-bold mt-8 text-lg max-w-2xl">

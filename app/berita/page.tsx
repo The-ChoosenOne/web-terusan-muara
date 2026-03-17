@@ -12,7 +12,7 @@ export default async function BeritaPage() {
     .order("tanggal", { ascending: false });
 
   return (
-    <main className="min-h-screen bg-slate-50 pb-24 pt-40">
+    <main className="min-h-screen bg-slate-50 pb-24 pt-30">
       <div className="max-w-7xl mx-auto px-6">
         
         {/* Header Desa Terusan Muara */}

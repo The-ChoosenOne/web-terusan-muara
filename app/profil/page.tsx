@@ -18,7 +18,7 @@ export default async function ProfilDesa() {
     <main className="min-h-screen bg-slate-50 pb-20">
       
       {/* --- SECTION BARU: HERO PROFIL (JUDUL & SLOGAN) --- */}
-      <section className="relative pt-40 pb-24 bg-slate-900 overflow-hidden">
+      <section className="relative pt-30 pb-20 bg-slate-900 overflow-hidden">
         {/* Dekorasi Background */}
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute top-0 left-0 w-96 h-96 bg-cyan-500 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2"></div>
@@ -30,7 +30,7 @@ export default async function ProfilDesa() {
             Informasi Desa
           </span>
           {/* Manggil judul_profil dari Dashboard */}
-          <h1 className="text-5xl md:text-8xl font-[1000] text-white mt-8 mb-6 uppercase tracking-tighter leading-[0.85]">
+          <h1 className="text-5xl md:text-7xl font-[1000] text-white mt-8 mb-6 uppercase tracking-tighter leading-[0.85]">
             {profil.judul_profil || "Profil Desa Terusan Muara"}
           </h1>
           {/* Manggil tagline dari Dashboard */}

@@ -26,7 +26,7 @@ export default async function DetailBerita({ params }: { params: Promise<{ slug:
   const { judul, tanggal, konten, foto_url } = berita;
 
   return (
-    <main className="min-h-screen bg-white pb-24 pt-40 animate-in fade-in duration-700">
+    <main className="min-h-screen bg-white pb-24 pt-30 animate-in fade-in duration-700">
       <article className="max-w-4xl mx-auto px-6">
         
         {/* Navigasi Kembali */}
@@ -35,11 +35,11 @@ export default async function DetailBerita({ params }: { params: Promise<{ slug:
         </Link>
 
         {/* Judul Berita */}
-        <h1 className="text-4xl md:text-7xl font-[1000] text-slate-900 mb-10 leading-[0.85] tracking-tighter uppercase italic">
+        <h1 className="text-4xl md:text-6xl font-[1000] text-slate-900 mb-7 leading-[0.85] tracking-tighter uppercase italic">
           {judul}
         </h1>
 
-        <div className="flex items-center text-slate-400 mb-16 border-b border-slate-50 pb-10">
+        <div className="flex items-center text-slate-400 mb-12 border-b border-slate-50">
           <span className="bg-slate-900 text-cyan-300 px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] shadow-lg border border-cyan-500/30 flex items-center gap-2">
             <span className="animate-pulse">📅</span> {tanggal ? new Date(tanggal).toLocaleDateString("id-ID", {
               day: 'numeric', month: 'long', year: 'numeric'
