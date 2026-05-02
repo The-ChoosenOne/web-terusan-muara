@@ -21,12 +21,12 @@ export default async function ProfilDesa() {
       <section className="relative pt-30 pb-20 bg-slate-900 overflow-hidden">
         {/* Dekorasi Background */}
         <div className="absolute inset-0 opacity-10 pointer-events-none">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-cyan-500 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2"></div>
+          <div className="absolute top-0 left-0 w-96 h-96 bg-amber-500 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2"></div>
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500 rounded-full blur-[120px] translate-x-1/2 translate-y-1/2"></div>
         </div>
 
         <div className="max-w-6xl mx-auto px-6 relative z-10 text-center">
-          <span className="bg-cyan-500/20 text-cyan-300 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.4em] border border-cyan-500/30 backdrop-blur-md">
+          <span className="bg-amber-500/20 text-amber-300 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.4em] border border-amber-500/30 backdrop-blur-md">
             Informasi Desa
           </span>
           {/* Manggil judul_profil dari Dashboard */}
@@ -34,7 +34,7 @@ export default async function ProfilDesa() {
             {profil.judul_profil || "Profil Desa Terusan Muara"}
           </h1>
           {/* Manggil tagline dari Dashboard */}
-          <p className="text-cyan-400 text-xl md:text-3xl font-black italic opacity-90 tracking-tight">
+          <p className="text-amber-400 text-xl md:text-3xl font-black italic opacity-90 tracking-tight">
             "{profil.tagline || "Membangun Bersama Masyarakat Menuju Desa Mandiri"}"
           </p>
         </div>
@@ -48,10 +48,10 @@ export default async function ProfilDesa() {
             {/* Aksen hiasan */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-bl-[100px] -z-0"></div>
             
-            <h2 className="text-xl font-black text-cyan-700 mb-8 uppercase tracking-[0.2em] flex items-center gap-3 relative z-10">
-              <span className="h-px w-8 bg-cyan-300"></span> 📜 Sejarah Desa
+            <h2 className="text-xl font-black text-amber-700 mb-8 uppercase tracking-[0.2em] flex items-center gap-3 relative z-10">
+              <span className="h-px w-8 bg-amber-300"></span> 📜 Sejarah Desa
             </h2>
-            <div className="prose prose-lg max-w-none text-slate-700 leading-relaxed italic border-l-4 border-cyan-100 pl-8 whitespace-pre-wrap relative z-10 font-medium">
+            <div className="prose prose-lg max-w-none text-slate-700 leading-relaxed italic border-l-4 border-amber-100 pl-8 whitespace-pre-wrap relative z-10 font-medium">
               {profil.sejarah ? String(profil.sejarah) : "Narasi sejarah desa sedang dalam proses penyusunan."}
             </div>
           </div>
@@ -60,8 +60,8 @@ export default async function ProfilDesa() {
         {/* --- SECTION 2: VISI & MISI --- */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-24">
           {/* KARTU VISI */}
-          <div className="bg-white p-10 rounded-[40px] shadow-xl border-b-8 border-cyan-500 hover:-translate-y-3 transition-all duration-500 group">
-            <div className="w-16 h-16 bg-cyan-50 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 group-hover:bg-cyan-100 transition shadow-inner">🎯</div>
+          <div className="bg-white p-10 rounded-[40px] shadow-xl border-b-8 border-amber-500 hover:-translate-y-3 transition-all duration-500 group">
+            <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 group-hover:bg-amber-100 transition shadow-inner">🎯</div>
             <h3 className="text-2xl font-black text-slate-800 mb-4 uppercase tracking-tight">Visi Desa</h3>
             <p className="text-slate-600 leading-relaxed font-bold italic text-xl">
               {profil.visi ? `"${String(profil.visi)}"` : "Belum diisi di dashboard."}
@@ -82,15 +82,15 @@ export default async function ProfilDesa() {
         <section className="mt-20">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 uppercase tracking-tighter">
-              Struktur <span className="text-cyan-600">Organisasi</span>
+              Struktur <span className="text-amber-600">Organisasi</span>
             </h2>
-            <div className="h-2 w-24 bg-cyan-400 mx-auto mt-6 rounded-full shadow-sm"></div>
+            <div className="h-2 w-24 bg-amber-400 mx-auto mt-6 rounded-full shadow-sm"></div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {allPerangkat.length > 0 ? (
               allPerangkat.map((staf: any) => (
-                <div key={staf.id} className="bg-white p-8 rounded-[40px] shadow-sm border border-slate-50 flex flex-col items-center group hover:shadow-2xl hover:border-cyan-100 transition-all duration-500">
+                <div key={staf.id} className="bg-white p-8 rounded-[40px] shadow-sm border border-slate-50 flex flex-col items-center group hover:shadow-2xl hover:border-amber-100 transition-all duration-500">
                   <div className="relative w-40 h-40 rounded-[2.5rem] overflow-hidden mb-8 border-4 border-slate-50 shadow-lg bg-slate-100 group-hover:scale-105 transition-transform duration-500">
                     <Image 
                       src={staf.foto_url || "/kades-placeholder.jpg"} 
@@ -102,7 +102,7 @@ export default async function ProfilDesa() {
                   <h3 className="text-lg font-black text-slate-800 text-center uppercase tracking-tight leading-tight px-2 min-h-[3rem]">
                     {staf.nama || "Perangkat Desa"}
                   </h3>
-                  <span className="text-cyan-700 font-black uppercase tracking-[0.2em] text-[9px] mt-6 bg-cyan-50 px-6 py-2 rounded-full border border-cyan-100 shadow-sm">
+                  <span className="text-amber-700 font-black uppercase tracking-[0.2em] text-[9px] mt-6 bg-amber-50 px-6 py-2 rounded-full border border-amber-100 shadow-sm">
                     {staf.jabatan || "Staf"}
                   </span>
                 </div>

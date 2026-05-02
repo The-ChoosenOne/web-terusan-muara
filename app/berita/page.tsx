@@ -17,9 +17,9 @@ export default async function BeritaPage() {
         
         {/* Header Desa Terusan Muara */}
         <div className="mb-20 text-center md:text-left">
-          <span className="text-cyan-600 font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Portal Informasi</span>
-          <h1 className="text-4xl md:text-6xl font-[1000] text-slate-900 mb-12 uppercase tracking-tighter border-l-8 border-cyan-400 pl-8">
-          Berita <span className="text-cyan-600">Terusan Muara</span>
+          <span className="text-amber-600 font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Portal Informasi</span>
+          <h1 className="text-4xl md:text-6xl font-[1000] text-slate-900 mb-12 uppercase tracking-tighter border-l-8 border-amber-400 pl-8">
+          Berita <span className="text-amber-600">Terusan Muara</span>
         </h1>
         </div>
 
@@ -39,7 +39,7 @@ export default async function BeritaPage() {
                 ) : (
                   <div className="flex items-center justify-center h-full text-slate-300 font-black uppercase text-[10px]">No Asset</div>
                 )}
-                <div className="absolute top-6 left-6 bg-slate-900/90 backdrop-blur text-cyan-300 text-[9px] font-black px-4 py-2 rounded-full uppercase tracking-widest border border-cyan-500/20 shadow-lg">
+                <div className="absolute top-6 left-6 bg-slate-900/90 backdrop-blur text-amber-300 text-[9px] font-black px-4 py-2 rounded-full uppercase tracking-widest border border-amber-500/20 shadow-lg">
                   Update Terbaru
                 </div>
               </div>
@@ -47,13 +47,13 @@ export default async function BeritaPage() {
               {/* Konten Berita */}
               <div className="p-10 flex flex-col flex-grow text-black">
                 <div className="flex items-center gap-3 mb-6">
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
                   <p className="text-slate-400 font-black text-[10px] uppercase tracking-[0.2em]">
                     {item.tanggal ? new Date(item.tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : "Baru Saja"}
                   </p>
                 </div>
 
-                <h3 className="text-2xl font-[1000] text-slate-900 mb-6 line-clamp-2 group-hover:text-cyan-600 transition-colors leading-tight tracking-tighter uppercase italic">
+                <h3 className="text-2xl font-[1000] text-slate-900 mb-6 line-clamp-2 group-hover:text-amber-600 transition-colors leading-tight tracking-tighter uppercase italic">
                   {item.judul}
                 </h3>
 
@@ -63,7 +63,7 @@ export default async function BeritaPage() {
                 </p>
 
                 <div className="mt-auto pt-6 border-t border-slate-50">
-                  <Link href={`/berita/${item.slug}`} className="flex items-center gap-2 text-slate-900 font-black text-xs uppercase tracking-widest hover:text-cyan-600 transition-colors">
+                  <Link href={`/berita/${item.slug}`} className="flex items-center gap-2 text-slate-900 font-black text-xs uppercase tracking-widest hover:text-amber-600 transition-colors">
                     Baca Selengkapnya <span className="text-lg">→</span>
                   </Link>
                 </div>

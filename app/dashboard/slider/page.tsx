@@ -64,7 +64,7 @@ export default function HalamanSlider() {
     <div className="p-8 bg-white rounded-[40px] shadow-sm border border-slate-100 text-slate-900">
       <div className="mb-10">
         <h1 className="text-3xl font-[1000] uppercase tracking-tighter text-slate-900 italic">
-          🖼️ Manajemen <span className="text-cyan-600">Slider Beranda</span>
+          🖼️ Manajemen <span className="text-amber-600">Slider Beranda</span>
         </h1>
         <p className="text-slate-500 font-bold mt-2">
           Kelola foto dokumentasi Desa Terusan Muara yang tampil di slider utama.
@@ -72,17 +72,17 @@ export default function HalamanSlider() {
       </div>
       
       {/* FORM UPLOAD */}
-      <form onSubmit={handleSubmit} className="mb-12 p-10 bg-slate-50 rounded-[45px] border-4 border-dashed border-slate-200 group hover:border-cyan-200 transition-colors">
+      <form onSubmit={handleSubmit} className="mb-12 p-10 bg-slate-50 rounded-[45px] border-4 border-dashed border-slate-200 group hover:border-amber-200 transition-colors">
         <input 
           type="file" 
           name="fotoHero" 
           required 
-          className="mb-8 block w-full text-sm text-slate-500 file:mr-6 file:py-3 file:px-8 file:rounded-2xl file:border-0 file:bg-slate-900 file:text-cyan-400 file:font-black hover:file:bg-black transition-all cursor-pointer" 
+          className="mb-8 block w-full text-sm text-slate-500 file:mr-6 file:py-3 file:px-8 file:rounded-2xl file:border-0 file:bg-slate-900 file:text-amber-400 file:font-black hover:file:bg-black transition-all cursor-pointer" 
         />
         <button 
           disabled={loading} 
           type="submit" 
-          className="bg-cyan-300 hover:bg-slate-900 hover:text-cyan-300 text-slate-900 font-black py-4 px-12 rounded-2xl transition-all uppercase text-xs tracking-[0.3em] shadow-xl shadow-cyan-300/20 active:scale-95 disabled:opacity-50"
+          className="bg-amber-300 hover:bg-slate-900 hover:text-amber-300 text-slate-900 font-black py-4 px-12 rounded-2xl transition-all uppercase text-xs tracking-[0.3em] shadow-xl shadow-amber-300/20 active:scale-95 disabled:opacity-50"
         >
           {loading ? "⌛ SEDANG MEMPROSES..." : "🚀 TERBITKAN KE BERANDA"}
         </button>
@@ -99,7 +99,7 @@ export default function HalamanSlider() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {listFoto.length > 0 ? (
           listFoto.map((foto) => (
-            <div key={foto.id} className="group relative h-60 bg-slate-100 rounded-[35px] overflow-hidden border border-slate-200 shadow-lg hover:shadow-cyan-500/10 transition-all duration-500">
+            <div key={foto.id} className="group relative h-60 bg-slate-100 rounded-[35px] overflow-hidden border border-slate-200 shadow-lg hover:shadow-amber-500/10 transition-all duration-500">
               {foto.foto_url ? (
                 <>
                   <img 
@@ -118,7 +118,7 @@ export default function HalamanSlider() {
 
                   {/* OVERLAY INFO */}
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-6">
-                    <span className="text-[9px] font-black text-cyan-300 uppercase tracking-widest bg-slate-900/80 px-4 py-2 rounded-full backdrop-blur-sm">
+                    <span className="text-[9px] font-black text-amber-300 uppercase tracking-widest bg-slate-900/80 px-4 py-2 rounded-full backdrop-blur-sm">
                       Aktif di Beranda
                     </span>
                   </div>

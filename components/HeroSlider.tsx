@@ -43,31 +43,31 @@ export default function HeroSlider({ photos }: { photos: string[] }) {
                 className="object-cover animate-pulse-slow" // Gue tambahin animasi halus
               />
               {/* Overlay Gradient Slate tetap ada */}
-              <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/50 to-transparent z-10" />
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-800 via-slate-600/40 to-transparent z-10" />
             </div>
 
             {/* KONTEN TEKS */}
             <div className="relative z-20 h-full flex items-center px-10 md:px-24">
               <div className="max-w-4xl text-left">
-                <div className="mb-6 inline-block px-4 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 backdrop-blur-md">
-                  <span className="text-[10px] font-black tracking-[0.4em] uppercase text-cyan-300">
+                <div className="mb-6 inline-block px-4 py-1 rounded-full border border-yellow-500/30 bg-yellow-500/40 backdrop-blur-md">
+                  <span className="text-[10px] font-black tracking-[0.4em] uppercase text-white">
                     Official Village Portal
                   </span>
                 </div>
                 
                 <h1 className="text-6xl md:text-[120px] font-[1000] text-white uppercase tracking-tighter leading-[0.8] mb-8 drop-shadow-2xl">
                   Selamat <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-amber-500">
                     Datang
                   </span>
                 </h1>
 
-                <p className="text-xl md:text-4xl font-black italic text-white/90 mb-8 border-l-4 border-cyan-400 pl-6 uppercase tracking-tight">
+                <p className="text-xl md:text-4xl font-black italic text-white/90 mb-8 border-l-4 border-amber-400 pl-6 uppercase tracking-tight">
                   Di Desa Terusan Muara
                 </p>
 
                 <p className="text-sm md:text-xl text-slate-300 font-medium max-w-lg leading-relaxed">
-                  "Membangun Desa yang Mandiri, Sejahtera, dan Berbasis Digital Menuju Banyuasin Maju"
+                  "Kebersamaan Dalam Membangun Demi Desa Terusan Muara Yang Lebih Maju"
                 </p>
               </div>
             </div>

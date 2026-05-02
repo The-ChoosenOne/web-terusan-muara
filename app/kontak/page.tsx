@@ -6,13 +6,13 @@ export default function Kontak() {
       <div className="bg-slate-900 h-96 flex items-center justify-center relative overflow-hidden pt-20">
         <div className="absolute inset-0 bg-slate-900 opacity-60"></div>
         
-        {/* Dekorasi Latar Belakang Cyan */}
-        <div className="absolute -top-20 -right-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px]"></div>
-        <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-cyan-300/10 rounded-full blur-[120px]"></div>
+        {/* Dekorasi Latar Belakang amber */}
+        <div className="absolute -top-20 -right-20 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px]"></div>
+        <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-amber-300/10 rounded-full blur-[120px]"></div>
         
         <div className="text-center relative z-10 px-4">
           <h1 className="text-5xl md:text-7xl font-[1000] text-white mb-6 uppercase tracking-tighter leading-none">
-            Hubungi <span className="text-cyan-400">Kami</span>
+            Hubungi <span className="text-amber-400">Kami</span>
           </h1>
           <p className="text-slate-300 text-lg md:text-xl max-w-2xl mx-auto font-medium opacity-90 leading-relaxed italic">
             "Layanan Aspirasi, Informasi, & Lokasi Strategis Pemerintah Desa Terusan Muara"
@@ -24,21 +24,21 @@ export default function Kontak() {
         
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
           
-          {/* 2. KOTAK KIRI: INFO KONTAK (Slate & Cyan) */}
+          {/* 2. KOTAK KIRI: INFO KONTAK (Slate & amber) */}
           <div className="lg:col-span-2 bg-white p-10 md:p-12 rounded-[50px] shadow-2xl shadow-slate-900/10 h-full border border-slate-50" data-aos="fade-right">
             <h2 className="text-3xl font-black text-slate-900 mb-10 flex items-center gap-4">
-              <span className="text-cyan-500 text-4xl">📍</span> Kantor Desa
+              <span className="text-amber-500 text-4xl">📍</span> Kantor Desa
             </h2>
             
             <div className="space-y-10">
               
               {/* Alamat Terusan Muara */}
               <div className="flex items-start gap-6">
-                <div className="bg-slate-900 p-5 rounded-2xl text-cyan-300 text-2xl shadow-lg border border-cyan-500/30">
+                <div className="bg-slate-900 p-5 rounded-2xl text-amber-300 text-2xl shadow-lg border border-amber-500/30">
                   🏢
                 </div>
                 <div>
-                  <h3 className="font-black text-cyan-600 uppercase text-[10px] tracking-[0.2em] mb-2">Alamat Lengkap</h3>
+                  <h3 className="font-black text-amber-600 uppercase text-[10px] tracking-[0.2em] mb-2">Alamat Lengkap</h3>
                   <p className="text-slate-600 font-bold leading-relaxed text-sm md:text-base">
                     Jl. Poros Desa Terusan Muara, <br/>
                     Kecamatan Sumber Marga Telang, Kabupaten Banyuasin, <br/>
@@ -62,11 +62,11 @@ export default function Kontak() {
 
               {/* Jam Kerja */}
               <div className="flex items-start gap-6">
-                <div className="bg-cyan-50 p-5 rounded-2xl text-cyan-600 text-2xl shadow-sm border border-cyan-100">
+                <div className="bg-amber-50 p-5 rounded-2xl text-amber-600 text-2xl shadow-sm border border-amber-100">
                   🕒
                 </div>
                 <div>
-                  <h3 className="font-black text-cyan-700 uppercase text-[10px] tracking-[0.2em] mb-2">Jam Pelayanan</h3>
+                  <h3 className="font-black text-amber-700 uppercase text-[10px] tracking-[0.2em] mb-2">Jam Pelayanan</h3>
                   <p className="text-slate-700 font-bold text-sm md:text-base">
                     Senin - Jumat: 08.00 - 16.00 WIB<br/>
                     <span className="text-red-500 font-black uppercase text-[10px] mt-1 block tracking-widest">Sabtu - Minggu: Libur</span>
@@ -81,7 +81,7 @@ export default function Kontak() {
               <a 
                 href="https://wa.me/6281278318862" 
                 target="_blank"
-                className="group flex items-center justify-center gap-4 w-full bg-cyan-300 hover:bg-slate-900 hover:text-cyan-300 text-slate-900 font-black py-5 rounded-[25px] transition-all duration-500 shadow-xl shadow-cyan-300/20 active:scale-95 uppercase text-xs tracking-[0.2em]"
+                className="group flex items-center justify-center gap-4 w-full bg-amber-300 hover:bg-slate-900 hover:text-amber-300 text-slate-900 font-black py-5 rounded-[25px] transition-all duration-500 shadow-xl shadow-amber-300/20 active:scale-95 uppercase text-xs tracking-[0.2em]"
               >
                 <span className="text-2xl group-hover:animate-bounce">💬</span> Chat WhatsApp
               </a>

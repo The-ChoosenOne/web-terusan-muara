@@ -58,9 +58,9 @@ export default function CRUDLayanan() {
     <div className="p-2 animate-fade-in text-slate-900">
       <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
         <h1 className="text-3xl font-[1000] uppercase italic tracking-tighter">
-          Kelola <span className="text-cyan-600">Layanan Surat</span>
+          Kelola <span className="text-amber-600">Layanan Surat</span>
         </h1>
-        <button onClick={() => openModal()} className="bg-cyan-300 hover:bg-slate-900 hover:text-cyan-300 text-slate-900 px-8 py-3 rounded-2xl font-black shadow-xl transition-all uppercase text-xs tracking-widest">+ Tambah Layanan</button>
+        <button onClick={() => openModal()} className="bg-amber-300 hover:bg-slate-900 hover:text-amber-300 text-slate-900 px-8 py-3 rounded-2xl font-black shadow-xl transition-all uppercase text-xs tracking-widest">+ Tambah Layanan</button>
       </div>
 
       {isFormOpen && (
@@ -72,19 +72,19 @@ export default function CRUDLayanan() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Judul Surat</label>
-                <input name="judul" defaultValue={selectedLayanan?.judul} type="text" className="w-full border-2 p-5 rounded-2xl font-bold bg-slate-50 outline-none focus:border-cyan-400" placeholder="Contoh: Surat Domisili" required />
+                <input name="judul" defaultValue={selectedLayanan?.judul} type="text" className="w-full border-2 p-5 rounded-2xl font-bold bg-slate-50 outline-none focus:border-amber-400" placeholder="Contoh: Surat Domisili" required />
               </div>
               <div>
                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Persyaratan (Gunakan ENTER untuk tiap poin)</label>
-                <textarea name="persyaratan" defaultValue={selectedLayanan?.persyaratan} rows={5} className="w-full border-2 p-5 rounded-2xl font-bold bg-slate-50 outline-none focus:border-cyan-400" placeholder="Fotokopi KTP&#10;Fotokopi KK" required></textarea>
+                <textarea name="persyaratan" defaultValue={selectedLayanan?.persyaratan} rows={5} className="w-full border-2 p-5 rounded-2xl font-bold bg-slate-50 outline-none focus:border-amber-400" placeholder="Fotokopi KTP&#10;Fotokopi KK" required></textarea>
               </div>
               <div>
                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Catatan Tambahan</label>
-                <textarea name="catatan" defaultValue={selectedLayanan?.catatan} rows={2} className="w-full border-2 p-5 rounded-2xl font-bold bg-slate-50 outline-none focus:border-cyan-400" placeholder="Catatan kecil untuk warga..."></textarea>
+                <textarea name="catatan" defaultValue={selectedLayanan?.catatan} rows={2} className="w-full border-2 p-5 rounded-2xl font-bold bg-slate-50 outline-none focus:border-amber-400" placeholder="Catatan kecil untuk warga..."></textarea>
               </div>
               <div className="flex justify-end gap-4 pt-6">
                 <button type="button" onClick={() => setFormOpen(false)} className="text-slate-400 font-black uppercase text-[10px] tracking-widest">Batal</button>
-                <button type="submit" className="bg-slate-900 text-cyan-300 px-10 py-5 rounded-[25px] font-black uppercase text-[10px] tracking-widest">
+                <button type="submit" className="bg-slate-900 text-amber-300 px-10 py-5 rounded-[25px] font-black uppercase text-[10px] tracking-widest">
                   {loading ? "Sabar Jak..." : "Simpan Data 🚀"}
                 </button>
               </div>
@@ -96,7 +96,7 @@ export default function CRUDLayanan() {
       {/* TABEL DATA */}
       <div className="bg-white rounded-[40px] shadow-2xl overflow-hidden border border-slate-50">
         <table className="w-full text-left">
-          <thead className="bg-slate-900 text-cyan-300 text-[10px] font-black uppercase tracking-widest">
+          <thead className="bg-slate-900 text-amber-300 text-[10px] font-black uppercase tracking-widest">
             <tr>
               <th className="p-6">No</th>
               <th className="p-6">Jenis Layanan</th>
@@ -105,7 +105,7 @@ export default function CRUDLayanan() {
           </thead>
           <tbody className="divide-y divide-slate-50">
             {layanan.map((item, index) => (
-              <tr key={item.id} className="hover:bg-cyan-50/50 transition-all group">
+              <tr key={item.id} className="hover:bg-amber-50/50 transition-all group">
                 <td className="p-6 text-slate-300 font-bold">{index + 1}</td>
                 <td className="p-6 font-black text-slate-800 uppercase text-xs">{item.judul}</td>
                 <td className="p-6 flex justify-center gap-3">

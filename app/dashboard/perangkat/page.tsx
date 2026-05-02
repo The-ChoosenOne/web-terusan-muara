@@ -83,13 +83,13 @@ export default function AdminPerangkat() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
         <div>
           <h1 className="text-3xl font-[1000] text-slate-900 uppercase tracking-tighter italic">
-            Kelola <span className="text-cyan-600">Perangkat Desa</span>
+            Kelola <span className="text-amber-600">Perangkat Desa</span>
           </h1>
           <p className="text-slate-400 text-sm font-bold mt-1">Data otomatis sinkron ke slider Beranda & Profil.</p>
         </div>
         <button 
           onClick={() => { setEditingStaf(null); setFormOpen(true); }} 
-          className="bg-cyan-300 hover:bg-slate-900 hover:text-cyan-300 text-slate-900 px-8 py-4 rounded-2xl font-[1000] shadow-xl shadow-cyan-300/20 transition-all active:scale-95 flex items-center gap-3 uppercase text-xs tracking-widest"
+          className="bg-amber-300 hover:bg-slate-900 hover:text-amber-300 text-slate-900 px-8 py-4 rounded-2xl font-[1000] shadow-xl shadow-amber-300/20 transition-all active:scale-95 flex items-center gap-3 uppercase text-xs tracking-widest"
         >
           ➕ Tambah Staf Baru
         </button>
@@ -104,7 +104,7 @@ export default function AdminPerangkat() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {perangkat.length > 0 ? (
             perangkat.map((item: any) => (
-              <div key={item.id} className="bg-white p-6 rounded-[40px] shadow-sm border border-slate-100 flex flex-col items-center group hover:shadow-2xl transition-all duration-500 hover:border-cyan-100">
+              <div key={item.id} className="bg-white p-6 rounded-[40px] shadow-sm border border-slate-100 flex flex-col items-center group hover:shadow-2xl transition-all duration-500 hover:border-amber-100">
                 <div className="w-28 h-28 rounded-3xl overflow-hidden mb-6 border-4 border-slate-50 shadow-lg bg-slate-50">
                   {item.foto_url ? (
                     <img 
@@ -117,14 +117,14 @@ export default function AdminPerangkat() {
                   )}
                 </div>
                 <h3 className="font-black text-slate-800 text-center line-clamp-1 uppercase text-sm tracking-tight mb-2">{item.nama}</h3>
-                <span className="text-cyan-700 font-black uppercase tracking-[0.2em] text-[9px] bg-cyan-50 px-4 py-1.5 rounded-full border border-cyan-100 shadow-sm">
+                <span className="text-amber-700 font-black uppercase tracking-[0.2em] text-[9px] bg-amber-50 px-4 py-1.5 rounded-full border border-amber-100 shadow-sm">
                   {item.jabatan}
                 </span>
                 
                 <div className="flex gap-3 mt-8 w-full">
                   <button 
                     onClick={() => { setEditingStaf(item); setFormOpen(true); }}
-                    className="flex-1 bg-slate-50 text-slate-600 text-[10px] py-3 rounded-xl font-black uppercase tracking-widest hover:bg-slate-900 hover:text-cyan-300 transition-all shadow-sm"
+                    className="flex-1 bg-slate-50 text-slate-600 text-[10px] py-3 rounded-xl font-black uppercase tracking-widest hover:bg-slate-900 hover:text-amber-300 transition-all shadow-sm"
                     disabled={loading}
                   >
                     Edit
@@ -162,7 +162,7 @@ export default function AdminPerangkat() {
                   name="namaPerangkat" 
                   defaultValue={editingStaf?.nama || ""}
                   type="text" 
-                  className="border-2 border-slate-50 p-5 rounded-2xl w-full outline-none focus:border-cyan-400 transition-all text-slate-900 font-bold bg-slate-50/50" 
+                  className="border-2 border-slate-50 p-5 rounded-2xl w-full outline-none focus:border-amber-400 transition-all text-slate-900 font-bold bg-slate-50/50" 
                   placeholder="Contoh: Budi Santoso"
                   required 
                 />
@@ -174,7 +174,7 @@ export default function AdminPerangkat() {
                   name="jabatan" 
                   defaultValue={editingStaf?.jabatan || ""}
                   type="text" 
-                  className="border-2 border-slate-50 p-5 rounded-2xl w-full outline-none focus:border-cyan-400 transition-all text-slate-900 font-bold bg-slate-50/50" 
+                  className="border-2 border-slate-50 p-5 rounded-2xl w-full outline-none focus:border-amber-400 transition-all text-slate-900 font-bold bg-slate-50/50" 
                   placeholder="Contoh: Sekretaris Desa"
                   required 
                 />
@@ -188,7 +188,7 @@ export default function AdminPerangkat() {
                   name="fotoPerangkat" 
                   type="file" 
                   accept="image/*" 
-                  className="w-full text-xs text-slate-500 file:mr-6 file:py-3 file:px-8 file:rounded-2xl file:border-0 file:bg-slate-900 file:text-cyan-300 file:font-black hover:file:bg-black transition-all cursor-pointer shadow-sm" 
+                  className="w-full text-xs text-slate-500 file:mr-6 file:py-3 file:px-8 file:rounded-2xl file:border-0 file:bg-slate-900 file:text-amber-300 file:font-black hover:file:bg-black transition-all cursor-pointer shadow-sm" 
                   required={!editingStaf} 
                 />
               </div>
@@ -205,7 +205,7 @@ export default function AdminPerangkat() {
                 <button 
                   type="submit" 
                   disabled={loading} 
-                  className="bg-slate-900 text-cyan-300 px-10 py-5 rounded-[25px] font-[1000] uppercase text-[10px] tracking-[0.3em] shadow-2xl hover:bg-black disabled:opacity-50 transition-all active:scale-95"
+                  className="bg-slate-900 text-amber-300 px-10 py-5 rounded-[25px] font-[1000] uppercase text-[10px] tracking-[0.3em] shadow-2xl hover:bg-black disabled:opacity-50 transition-all active:scale-95"
                 >
                   {loading ? "Memproses..." : "Simpan Data 🚀"}
                 </button>

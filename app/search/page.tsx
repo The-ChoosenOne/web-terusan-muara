@@ -34,11 +34,11 @@ export default async function SearchPage({
         
         {/* JUDUL HASIL PENCARIAN */}
         <div className="mb-16">
-          <span className="text-cyan-600 font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Search Results</span>
+          <span className="text-amber-600 font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Search Results</span>
           <h1 className="text-4xl md:text-7xl font-[1000] text-slate-900 uppercase italic tracking-tighter leading-none">
-            Hasil Cari: <span className="text-cyan-600">"{query}"</span>
+            Hasil Cari: <span className="text-amber-600">"{query}"</span>
           </h1>
-          <div className="h-2 w-20 bg-cyan-400 mt-8 rounded-full"></div>
+          <div className="h-2 w-20 bg-amber-400 mt-8 rounded-full"></div>
         </div>
 
         {/* --- SECTION BERITA --- */}
@@ -54,7 +54,7 @@ export default async function SearchPage({
               <Link 
                 href={`/berita/${item.slug}`} 
                 key={item.id} 
-                className="group bg-white p-6 rounded-[35px] border border-slate-100 hover:border-cyan-300 transition-all shadow-sm flex flex-col md:flex-row gap-6 items-center"
+                className="group bg-white p-6 rounded-[35px] border border-slate-100 hover:border-amber-300 transition-all shadow-sm flex flex-col md:flex-row gap-6 items-center"
               >
                 {item.foto_url && (
                   <div className="w-full md:w-32 h-24 rounded-[20px] overflow-hidden flex-shrink-0">
@@ -62,14 +62,14 @@ export default async function SearchPage({
                   </div>
                 )}
                 <div className="flex-1 text-center md:text-left">
-                  <h3 className="font-[1000] text-xl text-slate-800 uppercase italic tracking-tight group-hover:text-cyan-600 transition-colors">
+                  <h3 className="font-[1000] text-xl text-slate-800 uppercase italic tracking-tight group-hover:text-amber-600 transition-colors">
                     {item.judul}
                   </h3>
                   <p className="text-slate-500 text-xs font-medium mt-2 line-clamp-1 italic italic">
                     {item.deskripsi || "Baca detail berita selengkapnya..."}
                   </p>
                 </div>
-                <span className="text-cyan-400 font-bold hidden md:block">→</span>
+                <span className="text-amber-400 font-bold hidden md:block">→</span>
               </Link>
             )) : (
               <p className="text-center py-10 text-slate-400 italic font-medium">Tidak ada berita yang cocok dengan kata kunci tersebut.</p>
@@ -90,13 +90,13 @@ export default async function SearchPage({
               <Link 
                 href="/layanan" 
                 key={item.id} 
-                className="group bg-slate-900 p-8 rounded-[35px] hover:bg-cyan-400 transition-all flex justify-between items-center"
+                className="group bg-slate-900 p-8 rounded-[35px] hover:bg-amber-400 transition-all flex justify-between items-center"
               >
                 <div>
                   <h3 className="font-[1000] text-white group-hover:text-slate-900 uppercase italic tracking-tighter text-lg">
                     {item.judul}
                   </h3>
-                  <p className="text-cyan-400 group-hover:text-slate-700 text-[10px] font-black uppercase tracking-widest mt-1">
+                  <p className="text-amber-400 group-hover:text-slate-700 text-[10px] font-black uppercase tracking-widest mt-1">
                     Cek Persyaratan Layanan
                   </p>
                 </div>

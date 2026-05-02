@@ -15,7 +15,7 @@ export default function Hero() {
       {/* Teks di tengah dengan animasi fade-in sederhana */}
       <div className="relative z-10 px-4 max-w-5xl mx-auto">
         <h1 className="text-4xl md:text-7xl font-extrabold mb-6 drop-shadow-2xl tracking-tight">
-          Selamat Datang di <span className="text-cyan-300">Desa Terusan Muara</span>
+          Selamat Datang di <span className="text-amber-300">Desa Terusan Muara</span>
         </h1>
         <p className="text-lg md:text-2xl mb-10 text-slate-200 drop-shadow-md max-w-3xl mx-auto leading-relaxed">
           Membangun Desa yang Mandiri, Sejahtera, dan Berbudaya Menuju Banyuasin yang Lebih Maju.
@@ -24,7 +24,7 @@ export default function Hero() {
         <div className="flex flex-col md:flex-row items-center justify-center gap-4">
           <Link 
             href="/profil" 
-            className="w-full md:w-auto px-8 py-4 bg-cyan-300 hover:bg-cyan-200 text-slate-900 font-extrabold rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(103,232,249,0.3)] hover:scale-105"
+            className="w-full md:w-auto px-8 py-4 bg-amber-300 hover:bg-amber-200 text-slate-900 font-extrabold rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(103,232,249,0.3)] hover:scale-105"
           >
             Tentang Kami
           </Link>

@@ -4,7 +4,7 @@ import JamDigital from "./JamDigital";
 export default function HeaderAtas() {
   return (
     // Menggunakan latar abu-abu sangat muda (slate-50) agar tetap cerah
-    <div className="bg-slate-50 border-b border-slate-200 w-full">
+    <div className="bg-yellow-50 border-b border-slate-200 w-full">
       <div className="w-full px-4 md:px-8 h-auto md:h-28 flex flex-col md:flex-row justify-between items-center py-4 md:py-0">
         
         {/* === KIRI: Logo & Teks === */}
@@ -22,12 +22,12 @@ export default function HeaderAtas() {
           {/* Teks Alamat Desa - Aksen Border pakai Slate */}
           <div className="flex flex-col border-l-2 border-slate-300 pl-4 md:pl-6">
             <h1 className="text-2xl md:text-4xl font-extrabold text-slate-800 leading-tight tracking-tight">
-              Selamat <span className="text-cyan-600">Datang</span>
+              Selamat <span className="text-slate-800">Datang</span>
             </h1>
-            <p className="text-sm md:text-lg text-slate-600 font-bold tracking-wide">
+            <p className="text-sm md:text-lg text-slate-800 font-bold tracking-wide">
               Website Resmi Desa Terusan Muara
             </p>
-            <p className="text-[10px] md:text-xs text-slate-500 mt-1 italic uppercase font-medium tracking-widest">
+            <p className="text-[10px] md:text-xs text-slate-700 mt-1 italic uppercase font-medium tracking-widest">
               Kec. Sumber Marga Telang, Kab. Banyuasin, Sumatera Selatan
             </p>
           </div>
@@ -36,7 +36,7 @@ export default function HeaderAtas() {
         {/* === KANAN: Jam Digital === */}
         <div className="hidden md:block">
           {/* Box Jam Digital pakai Putih bersih agar kontras dengan bg slate-50 */}
-          <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <div className="bg-yellow-50 p-4 rounded-2xl">
             <JamDigital />
           </div>
         </div>

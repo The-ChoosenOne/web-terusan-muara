@@ -30,7 +30,7 @@ export default async function DetailBerita({ params }: { params: Promise<{ slug:
       <article className="max-w-4xl mx-auto px-6">
         
         {/* Navigasi Kembali */}
-        <Link href="/berita" className="text-cyan-600 font-[1000] mb-10 inline-flex items-center gap-3 hover:gap-5 transition-all group uppercase text-xs tracking-[0.2em]">
+        <Link href="/berita" className="text-amber-600 font-[1000] mb-10 inline-flex items-center gap-3 hover:gap-5 transition-all group uppercase text-xs tracking-[0.2em]">
           <span className="group-hover:-translate-x-2 transition-transform">←</span> Kembali ke Portal Berita
         </Link>
 
@@ -40,7 +40,7 @@ export default async function DetailBerita({ params }: { params: Promise<{ slug:
         </h1>
 
         <div className="flex items-center text-slate-400 mb-12 border-b border-slate-50">
-          <span className="bg-slate-900 text-cyan-300 px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] shadow-lg border border-cyan-500/30 flex items-center gap-2">
+          <span className="bg-slate-900 text-amber-300 px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] shadow-lg border border-amber-500/30 flex items-center gap-2">
             <span className="animate-pulse">📅</span> {tanggal ? new Date(tanggal).toLocaleDateString("id-ID", {
               day: 'numeric', month: 'long', year: 'numeric'
             }) : 'Tanggal tidak tersedia'}
@@ -61,7 +61,7 @@ export default async function DetailBerita({ params }: { params: Promise<{ slug:
         )}
 
         {/* CONTENT SECTION */}
-        <div className="prose prose-lg md:prose-2xl prose-slate max-w-none text-slate-700 leading-relaxed font-medium selection:bg-cyan-100">
+        <div className="prose prose-lg md:prose-2xl prose-slate max-w-none text-slate-700 leading-relaxed font-medium selection:bg-amber-100">
           <div 
             className="drop-shadow-sm whitespace-pre-line" 
             dangerouslySetInnerHTML={{ __html: konten }} 

@@ -71,11 +71,11 @@ export default function CRUDBerita() {
     <div className="p-2 animate-fade-in text-slate-900">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
         <h1 className="text-3xl font-[1000] text-slate-900 uppercase italic">
-          Kelola <span className="text-cyan-600">Berita Desa</span>
+          Kelola <span className="text-amber-600">Berita Desa</span>
         </h1>
         <button 
           onClick={() => { setIsEditMode(false); setFormOpen(true); }} 
-          className="bg-cyan-300 hover:bg-slate-900 hover:text-cyan-300 text-slate-900 px-8 py-3 rounded-2xl font-black shadow-xl shadow-cyan-300/20 transition-all uppercase text-xs tracking-widest active:scale-95"
+          className="bg-amber-300 hover:bg-slate-900 hover:text-amber-300 text-slate-900 px-8 py-3 rounded-2xl font-black shadow-xl shadow-amber-300/20 transition-all uppercase text-xs tracking-widest active:scale-95"
         >
           + Tambah Berita
         </button>
@@ -113,7 +113,7 @@ export default function CRUDBerita() {
                 <textarea name="deskripsi" defaultValue={selectedBerita?.deskripsi} rows={2} className="w-full border-2 p-5 rounded-2xl font-bold bg-slate-50" required></textarea>
               </div>
               <div className="flex justify-end gap-6 pt-4">
-                <button type="submit" className="bg-slate-900 text-cyan-300 px-10 py-5 rounded-[25px] font-black uppercase text-[10px] tracking-widest shadow-2xl">
+                <button type="submit" className="bg-slate-900 text-amber-300 px-10 py-5 rounded-[25px] font-black uppercase text-[10px] tracking-widest shadow-2xl">
                   {loading ? "Memproses..." : isEditMode ? "Simpan Perubahan 🪄" : "Terbitkan 🚀"}
                 </button>
               </div>
@@ -125,7 +125,7 @@ export default function CRUDBerita() {
       {/* TABEL DATA */}
       <div className="bg-white rounded-[40px] shadow-2xl overflow-hidden">
         <table className="w-full text-left">
-          <thead className="bg-slate-900 text-cyan-300 text-[10px] font-black uppercase tracking-widest">
+          <thead className="bg-slate-900 text-amber-300 text-[10px] font-black uppercase tracking-widest">
             <tr>
               <th className="p-6 text-center">No</th>
               <th className="p-6">Judul Berita</th>
@@ -134,7 +134,7 @@ export default function CRUDBerita() {
           </thead>
           <tbody className="divide-y divide-slate-50">
             {news.map((item: any, index: number) => (
-              <tr key={item.id} className="hover:bg-cyan-50/50 transition-all group">
+              <tr key={item.id} className="hover:bg-amber-50/50 transition-all group">
                 <td className="p-6 text-slate-300 font-bold text-center">{index + 1}</td>
                 <td className="p-6 font-black text-slate-800 uppercase text-xs">{item.judul}</td>
                 <td className="p-6 flex justify-center gap-3">

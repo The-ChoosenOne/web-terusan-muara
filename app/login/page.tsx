@@ -39,17 +39,17 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
       <div className="max-w-md w-full space-y-8 bg-white p-12 rounded-[55px] shadow-[0_32px_64px_-15px_rgba(0,0,0,0.1)] border border-slate-50 relative overflow-hidden">
         
-        {/* Aksen Slate & Cyan */}
-        <div className="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-slate-900 via-cyan-500 to-slate-900"></div>
+        {/* Aksen Slate & amber */}
+        <div className="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-slate-900 via-amber-500 to-slate-900"></div>
 
         <div className="text-center">
-          <div className="mx-auto h-24 w-24 bg-slate-900 rounded-[35px] flex items-center justify-center mb-8 shadow-2xl border border-cyan-500/30">
+          <div className="mx-auto h-24 w-24 bg-slate-900 rounded-[35px] flex items-center justify-center mb-8 shadow-2xl border border-amber-500/30">
             <span className={`text-5xl ${isLoading ? 'animate-bounce' : 'animate-pulse'}`}>
               {isLoading ? '🚀' : '🔐'}
             </span>
           </div>
           <h2 className="text-4xl font-[1000] text-slate-900 uppercase tracking-tighter leading-none mb-4 italic">
-            Admin <span className="text-cyan-600">Login</span>
+            Admin <span className="text-amber-600">Login</span>
           </h2>
           <div className="flex items-center justify-center gap-3">
             <span className="h-px w-8 bg-slate-100"></span>
@@ -63,14 +63,14 @@ export default function LoginPage() {
         <form className="mt-12 space-y-6" onSubmit={handleLogin}>
           <div className="space-y-5">
             <div className="group">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-5 mb-2 block group-focus-within:text-cyan-600 transition-colors">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-5 mb-2 block group-focus-within:text-amber-600 transition-colors">
                 Email Admin
               </label>
               <input
                 type="email"
                 required
                 disabled={isLoading}
-                className="w-full px-8 py-5 rounded-[25px] bg-slate-50 border-2 border-transparent focus:border-cyan-400 focus:bg-white text-slate-900 font-bold placeholder:text-slate-300 transition-all outline-none shadow-inner disabled:opacity-50"
+                className="w-full px-8 py-5 rounded-[25px] bg-slate-50 border-2 border-transparent focus:border-amber-400 focus:bg-white text-slate-900 font-bold placeholder:text-slate-300 transition-all outline-none shadow-inner disabled:opacity-50"
                 placeholder="admin@desaterusanmuara.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -78,14 +78,14 @@ export default function LoginPage() {
             </div>
             
             <div className="group">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-5 mb-2 block group-focus-within:text-cyan-600 transition-colors">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-5 mb-2 block group-focus-within:text-amber-600 transition-colors">
                 Password
               </label>
               <input
                 type="password"
                 required
                 disabled={isLoading}
-                className="w-full px-8 py-5 rounded-[25px] bg-slate-50 border-2 border-transparent focus:border-cyan-400 focus:bg-white text-slate-900 font-bold placeholder:text-slate-300 transition-all outline-none shadow-inner disabled:opacity-50"
+                className="w-full px-8 py-5 rounded-[25px] bg-slate-50 border-2 border-transparent focus:border-amber-400 focus:bg-white text-slate-900 font-bold placeholder:text-slate-300 transition-all outline-none shadow-inner disabled:opacity-50"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -97,12 +97,12 @@ export default function LoginPage() {
             type="submit"
             disabled={isLoading}
             className={`w-full py-6 rounded-[28px] font-[1000] uppercase tracking-[0.3em] transition-all active:scale-95 shadow-2xl mt-10 text-[10px] flex items-center justify-center gap-4
-              ${isLoading ? 'bg-slate-400 cursor-not-allowed text-white' : 'bg-slate-900 text-cyan-300 hover:bg-black shadow-cyan-500/10'}
+              ${isLoading ? 'bg-slate-400 cursor-not-allowed text-white' : 'bg-slate-900 text-amber-300 hover:bg-black shadow-amber-500/10'}
             `}
           >
             {isLoading ? (
               <>
-                <div className="w-4 h-4 border-2 border-cyan-300 border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-4 h-4 border-2 border-amber-300 border-t-transparent rounded-full animate-spin"></div>
                 Otentikasi...
               </>
             ) : (

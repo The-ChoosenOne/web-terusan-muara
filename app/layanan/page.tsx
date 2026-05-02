@@ -18,9 +18,9 @@ export default async function LayananSurat() {
         
         {/* Header Section - Tetap sama */}
         <div className="text-center md:text-left mb-16">
-          <span className="text-cyan-600 font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Pelayanan Publik</span>
+          <span className="text-amber-600 font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Pelayanan Publik</span>
           <h1 className="text-5xl md:text-7xl font-[1000] text-slate-900 uppercase tracking-tighter italic leading-[0.8]">
-            Layanan <span className="text-cyan-600">Surat</span>
+            Layanan <span className="text-amber-600">Surat</span>
           </h1>
           <p className="text-slate-500 font-bold mt-8 text-lg max-w-2xl">
             Berikut adalah daftar persyaratan administrasi untuk pengurusan surat-menyurat di Kantor Desa Terusan Muara.
@@ -32,11 +32,11 @@ export default async function LayananSurat() {
           {daftarSurat && daftarSurat.map((surat) => (
             <div key={surat.id} className="bg-white p-10 rounded-[50px] shadow-2xl shadow-slate-900/5 border border-slate-50 flex flex-col hover:-translate-y-2 transition-all duration-500 group">
               
-              <h3 className="text-2xl font-[1000] text-slate-800 mb-6 leading-tight uppercase italic tracking-tighter group-hover:text-cyan-600 transition-colors">
+              <h3 className="text-2xl font-[1000] text-slate-800 mb-6 leading-tight uppercase italic tracking-tighter group-hover:text-amber-600 transition-colors">
                 {surat.judul}
               </h3>
 
-              <div className="h-1 w-12 bg-cyan-400 mb-8 rounded-full"></div>
+              <div className="h-1 w-12 bg-amber-400 mb-8 rounded-full"></div>
 
               <div className="flex-grow">
                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Persyaratan:</p>
@@ -45,7 +45,7 @@ export default async function LayananSurat() {
                   {surat.persyaratan.split('\n').map((syarat: string, i: number) => (
                     syarat.trim() && ( // pastiin bukan baris kosong
                       <li key={i} className="flex items-start gap-3 text-slate-600 font-medium text-sm">
-                        <span className="text-cyan-500 mt-1">✓</span>
+                        <span className="text-amber-500 mt-1">✓</span>
                         {syarat}
                       </li>
                     )
@@ -71,7 +71,7 @@ export default async function LayananSurat() {
 
         {/* Info Tambahan Footer - Tetap sama */}
         <div className="mt-20 p-10 bg-slate-900 rounded-[50px] text-center shadow-2xl">
-          <p className="text-cyan-300 font-black uppercase tracking-[0.2em] text-xs">Jam Operasional Pelayanan</p>
+          <p className="text-amber-300 font-black uppercase tracking-[0.2em] text-xs">Jam Operasional Pelayanan</p>
           <h2 className="text-white text-2xl font-bold mt-4">Senin - Jumat | 08:00 - 15:00 WIB</h2>
           <p className="text-slate-400 text-sm mt-4 italic font-medium">Pastikan membawa dokumen asli untuk verifikasi jika diperlukan.</p>
         </div>
