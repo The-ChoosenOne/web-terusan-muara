@@ -83,7 +83,7 @@ export default function DashboardSummary() {
       <div className="bg-white p-8 md:p-10 rounded-[45px] border border-slate-200 shadow-xl overflow-hidden relative">
         <div className="absolute top-0 right-0 p-10 opacity-5 text-8xl grayscale">📊</div>
         <div className="relative z-10">
-          <h2 className="text-3xl font-[1000] text-slate-900 tracking-tighter mb-2 italic uppercase">Laporan Digital KKN</h2>
+          <h2 className="text-3xl font-[1000] text-slate-900 tracking-tighter mb-2 italic uppercase">Laporan Digital</h2>
           <p className="text-slate-400 font-bold text-[10px] uppercase tracking-[0.3em] mb-8">Ringkasan kontribusi digital untuk Desa Terusan Muara</p>
           
           <div className="grid md:grid-cols-3 gap-6">
