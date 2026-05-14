@@ -72,7 +72,7 @@ export default async function DetailBerita({ params }: { params: Promise<{ slug:
         <div className="mt-24 pt-12 border-t border-slate-50 text-center">
           <p className="text-[9px] font-black text-slate-300 uppercase tracking-[0.6em] flex items-center justify-center gap-4">
             <span className="h-px w-12 bg-slate-100"></span>
-            Pemerintah Desa Terusan Muara • KKN 2026
+            Pemerintah Desa Terusan Muara • 2026
             <span className="h-px w-12 bg-slate-100"></span>
           </p>
         </div>
