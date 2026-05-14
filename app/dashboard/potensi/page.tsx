@@ -153,7 +153,7 @@ export default function AdminPotensi() {
                   <option value="Perkebunan">Perkebunan</option>
                   <option value="UMKM">UMKM</option>
                   <option value="Wisata">Wisata</option>
-                  <option value="Wisata">Peternakan</option>
+                  <option value="Peternakan">Peternakan</option>
                 </select>
               </div>
               <div>
